@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net35</TargetFramework>
@@ -54,10 +54,13 @@
 		<DefineConstants>BETA, DEBUG</DefineConstants>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <EmbeddedResource Remove="Properties\Localize.ro.resx" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="CitiesHarmony.API" Version="2.0.0" />
-		<PackageReference Include="UnifiedUILib" Version="2.2.12" />
 		<Reference Include="Assembly-CSharp">
 			<Private>false</Private>
 		</Reference>
@@ -108,10 +111,11 @@
 	<Import Project="..\ModsCommon\LocalizeShared\ru\LocalizeShared.ru.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\ja\LocalizeShared.ja.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\fr\LocalizeShared.fr.projitems" Label="Shared" />
+	<Import Project="..\ModsCommon\LocalizeShared\cs\LocalizeShared.cs.projitems" Label="Shared" />
 
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
-		<!--<WorkshopId>2069057130</WorkshopId>-->
+		<WorkshopId>2866992009</WorkshopId>
 		<Type>Stable</Type>
 	</PropertyGroup>
 
@@ -142,11 +146,11 @@
 		<Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(LocalDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
-	<!--<Target Name="DeployToWorkshop" AfterTargets="PdbToMdb" Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Beta Release'">
+	<Target Name="DeployToWorkshop" AfterTargets="PdbToMdb" Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Beta Release'">
 		<Message Text="Deploy to workshop $(WorkshopDir)" Importance="high" />
 		<RemoveDir Directories="$(WorkshopDir)" />
 		<Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(WorkshopDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-		--><!--<Copy SourceFiles="$(ProjectDir)..\Workshop\PreviewImage$(Type).png" DestinationFiles="$(WorkshopDir)\PreviewImage.png" />--><!--
-	</Target>-->
+		<Copy SourceFiles="$(ProjectDir)..\Workshop\PreviewImage$(Type).png" DestinationFiles="$(WorkshopDir)\PreviewImage.png" />
+	</Target>
 
 </Project>

@@ -20,7 +20,7 @@ namespace NoProblems
         public override string NameRaw => "No Problem Notifications";
         public override string Description => !IsBeta ? Localize.Mod_Description : CommonLocalize.Mod_DescriptionBeta;
 
-        protected override ulong StableWorkshopId => 0ul;
+        protected override ulong StableWorkshopId => 2866992009ul;
         protected override ulong BetaWorkshopId => 0ul;
         public override string CrowdinUrl => "https://crowdin.com/translate/intersection-marking-tool/136";
 

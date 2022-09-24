@@ -57,6 +57,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LocalizeShared.fr", "ModsCo
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LocalizeShared.pl", "ModsCommon\LocalizeShared\pl\LocalizeShared.pl.shproj", "{0814BFCF-BB66-493C-8DD9-CA17EE904AFA}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LocalizeShared.cs", "ModsCommon\LocalizeShared\cs\LocalizeShared.cs.shproj", "{93E25CE1-9093-40BC-88A2-7362FFA44174}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ModsCommon\LocalizeShared\pl\LocalizeShared.pl.projitems*{0814bfcf-bb66-493c-8dd9-ca17ee904afa}*SharedItemsImports = 13
@@ -71,6 +73,7 @@ Global
 		ModsCommon\AutoLayoutPanelShared\AutoLayoutPanelShared.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\ColorsShared\ColorsShared.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\DependencyShared\DependencyShared.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
+		ModsCommon\LocalizeShared\cs\LocalizeShared.cs.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\LocalizeShared\fr\LocalizeShared.fr.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\LocalizeShared\ja\LocalizeShared.ja.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\LocalizeShared\LocalizeShared.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
@@ -85,6 +88,7 @@ Global
 		ModsCommon\WhatsNewMessageBoxShared\WhatsNewMessageBoxShared.projitems*{71040d68-eae4-4710-a4be-f98c9426cbb5}*SharedItemsImports = 5
 		ModsCommon\LocalizeShared\pt\LocalizeShared.pt.projitems*{7bb4ecd0-3aa5-4dfb-9c2a-37204213c1c5}*SharedItemsImports = 13
 		ModsCommon\WhatsNewMessageBoxShared\WhatsNewMessageBoxShared.projitems*{8431fa6d-34a1-4700-8d4f-09c9e65346e3}*SharedItemsImports = 13
+		ModsCommon\LocalizeShared\cs\LocalizeShared.cs.projitems*{93e25ce1-9093-40bc-88a2-7362ffa44174}*SharedItemsImports = 13
 		ModsCommon\LocalizeShared\fr\LocalizeShared.fr.projitems*{9cb86de4-4cd4-4265-ac8b-b041707112d9}*SharedItemsImports = 13
 		ModsCommon\SimpleMessageBoxShared\SimpleMessageBoxShared.projitems*{a3055caa-4807-4c49-973c-7b92610c25c8}*SharedItemsImports = 13
 		ModsCommon\LocalizeShared\ja\LocalizeShared.ja.projitems*{b0c05991-7f01-40c4-8efb-9d765cc72534}*SharedItemsImports = 13
@@ -105,21 +109,20 @@ Global
 		Stable Release|Any CPU = Stable Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.Build.0 = Release|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.ActiveCfg = Beta Debug|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.Build.0 = Beta Debug|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.Build.0 = Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.ActiveCfg = Beta Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.Build.0 = Beta Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.ActiveCfg = Beta Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.Build.0 = Beta Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.ActiveCfg = Stable Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.Build.0 = Stable Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.ActiveCfg = Stable Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.Build.0 = Stable Release|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|Any CPU.Build.0 = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|Any CPU.Build.0 = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +153,7 @@ Global
 		{7BB4ECD0-3AA5-4DFB-9C2A-37204213C1C5} = {5805AD2D-7909-4DB8-BA43-CAABA8833821}
 		{9CB86DE4-4CD4-4265-AC8B-B041707112D9} = {5805AD2D-7909-4DB8-BA43-CAABA8833821}
 		{0814BFCF-BB66-493C-8DD9-CA17EE904AFA} = {5805AD2D-7909-4DB8-BA43-CAABA8833821}
+		{93E25CE1-9093-40BC-88A2-7362FFA44174} = {5805AD2D-7909-4DB8-BA43-CAABA8833821}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53D327CD-2031-4840-B257-85A300CF0D5E}

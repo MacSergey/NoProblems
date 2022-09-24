@@ -1,0 +1,35 @@
+[img]https://i.imgur.com/ys8eGPj.png[/img]
+[HR][/HR] 
+[code][h1]Overview[/h1]
+[list][h2]This mod allow to disable showing of problem notifications. It only hides notifications, but does not resolve problems[/h2][/list]
+[/code]
+
+it is updated version of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=917543381]TPB's mod[/url].
+
+[h1]How to use[/h1]
+You can set which types of notifications you want to hide in the mod settings.
+You can toggle visibility of notifications by shortcut Ctrl+Shift+N from game (can be rebinded in the mod settings).
+You can hide only normal notifications, but still have visible major notifications.
+
+[h1]Main difference from original version[/h1]
+[list]
+[*]Using Harmony instead of old patching system.
+[*]Added new notifications from several last DLCs.
+[*]New options
+[*]Localizations
+[/list]
+
+[HR][/HR]
+[h1]Join to discord for discussion and support[/h1]
+[url=https://discord.gg/NnwhuBKMqj][img]https://i.imgur.com/bnDNN2x.png[/img][/url]
+
+[HR][/HR]
+[h1]Source code[/h1]
+[url=https://github.com/MacSergey/NoProblems][img]https://i.imgur.com/DczUXYq.png[/img][/url]
+
+[HR][/HR]
+[h1]Translations[/h1]
+If you want to help improve existing translations or you want to translate into your own language (ask to add it to the translation project).
+[url=https://crowdin.com/project/macsergey-other-mods][img]https://i.imgur.com/uG2NKvG.png[/img][/url]
+
+[HR][/HR][i]For full transparency: I am an employee at Colossal Order, however this is my personal account and as such all opinions, content and contributions to the community reflect my own views and interests, and are not created nor maintained as part of my job. Like all user generated content, this is not officially supported content and should be used at your own risk.[/i]
