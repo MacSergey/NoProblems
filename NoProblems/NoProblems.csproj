@@ -107,15 +107,7 @@
 	<Import Project="..\ModsCommon\LocalizeShared\LocalizeShared.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\ru\LocalizeShared.ru.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\ja\LocalizeShared.ja.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\de\LocalizeShared.de.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\nl\LocalizeShared.nl.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\zh-CN\LocalizeShared.zh-CN.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\it\LocalizeShared.it.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\es\LocalizeShared.es.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\ko\LocalizeShared.ko.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\pt\LocalizeShared.pt.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\fr\LocalizeShared.fr.projitems" Label="Shared" />
-	<Import Project="..\ModsCommon\LocalizeShared\pl\LocalizeShared.pl.projitems" Label="Shared" />
 
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">

@@ -70,6 +70,19 @@ namespace NoProblems {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на [UPDATED] Added Plaza &amp; Promenades DLC support.
+        ///[UPDATED] Add new notifications from several last DLCs.
+        ///[NEW] Added ability to hide normal notification, but show major notifications.
+        ///[NEW] Added shortcut for toggling notifications visibility.
+        ///[UPDATED] Using Harmony instead of old patching system..
+        /// </summary>
+        public static string Mod_WhatsNewMessage2_0 {
+            get {
+                return ResourceManager.GetString("Mod_WhatsNewMessage2_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Disable &quot;{0}&quot;.
         /// </summary>
         public static string Setting_DisableProblem {
@@ -178,7 +191,7 @@ namespace NoProblems {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Fishing Notifications.
+        ///   Ищет локализованную строку, похожую на Fishing notifications.
         /// </summary>
         public static string Settings_FishingGroup {
             get {
@@ -223,7 +236,7 @@ namespace NoProblems {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Parks notifacations.
+        ///   Ищет локализованную строку, похожую на Parks notifications.
         /// </summary>
         public static string Settings_ParksGroup {
             get {

@@ -17,7 +17,7 @@ namespace NoProblems
 {
     public class Mod : BasePatcherMod<Mod>
     {
-        public override string NameRaw => "No Problems Notifications";
+        public override string NameRaw => "No Problem Notifications";
         public override string Description => !IsBeta ? Localize.Mod_Description : CommonLocalize.Mod_DescriptionBeta;
 
         protected override ulong StableWorkshopId => 0ul;
@@ -26,7 +26,7 @@ namespace NoProblems
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
-            new ModVersion(new Version("1.0"), new DateTime()),
+            new ModVersion(new Version("2.0"), new DateTime(2022,9,24)),
         };
 
         protected override Version RequiredGameVersion => new Version(1, 15, 0, 7);
@@ -238,9 +238,9 @@ namespace NoProblems
         protected override void FillSettings()
         {
             base.FillSettings();
+            AddLanguage(GeneralTab);
 
             var checkBoxes = new Dictionary<ProblemStruct, UICheckBox>();
-
             var generalGroup = GeneralTab.AddGroup(CommonLocalize.Settings_General);
 
             var keyMapping = AddKeyMappingPanel(generalGroup);
