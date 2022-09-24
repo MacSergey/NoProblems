@@ -178,11 +178,19 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Hide any</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} —  this options just hide any notifications, but buildings behavior is keeped.
+{1} —  the same option, but only not major notifications will be hidden.
+{2} —  this option change buildings behavior, it prevents adding problem flags to buildings.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Hide normal, but show major</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
     <value>Hide option</value>
+  </data>
+  <data name="Setting_Remove" xml:space="preserve">
+    <value>Remove problem flags</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
     <value>Toggle visibility</value>

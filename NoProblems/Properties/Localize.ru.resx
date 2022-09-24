@@ -178,11 +178,19 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Срывать все</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — эта опция просто скрывает отображение уведомлений не меняя поведения зданий.
+{1} — то же самое, но только не серьезные уведомления будут скрыты.
+{2} — эта опция изменяет поведение зданий, препятствуя добавлению флагов проблем к нем.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Скрывать обычные, но показывать серьезные</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
     <value>Вариант скрытия</value>
+  </data>
+  <data name="Setting_Remove" xml:space="preserve">
+    <value>Удалить флаги проблем</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
     <value>Переключить видимость</value>
