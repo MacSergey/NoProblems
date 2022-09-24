@@ -120,7 +120,64 @@
   <data name="Mod_Description" xml:space="preserve">
     <value>Disable problem notifications</value>
   </data>
+  <data name="Settings_AirportGroup" xml:space="preserve">
+    <value>Airport notifications</value>
+  </data>
+  <data name="Settings_CampusGroup" xml:space="preserve">
+    <value>Campus notifications</value>
+  </data>
+  <data name="Settings_DisableAll" xml:space="preserve">
+    <value>Disable all</value>
+  </data>
+  <data name="Settings_DisableEntireGrope" xml:space="preserve">
+    <value>Disable entire group</value>
+  </data>
+  <data name="Settings_DisastersGroup" xml:space="preserve">
+    <value>Disasters notifications</value>
+  </data>
+  <data name="Settings_EnableAll" xml:space="preserve">
+    <value>Enable all</value>
+  </data>
+  <data name="Settings_EnableEntireGrope" xml:space="preserve">
+    <value>Enable entire group</value>
+  </data>
+  <data name="Settings_FishingGroup" xml:space="preserve">
+    <value>Fishing Notifications</value>
+  </data>
+  <data name="Settings_GeneralGroup" xml:space="preserve">
+    <value>General notifications</value>
+  </data>
+  <data name="Settings_IndustryGroup" xml:space="preserve">
+    <value>Industry notifications</value>
+  </data>
+  <data name="Settings_NotConnectedGroup" xml:space="preserve">
+    <value>Not connected notifications</value>
+  </data>
+  <data name="Settings_OtherGroup" xml:space="preserve">
+    <value>Other notifications</value>
+  </data>
+  <data name="Settings_ParksGroup" xml:space="preserve">
+    <value>Parks notifacations</value>
+  </data>
+  <data name="Settings_PedestrianGroup" xml:space="preserve">
+    <value>Pedestrian area notifications</value>
+  </data>
+  <data name="Settings_СonsumptionGroup" xml:space="preserve">
+    <value>Сonsumption notifications</value>
+  </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
     <value>Disable "{0}"</value>
+  </data>
+  <data name="Setting_HideAny" xml:space="preserve">
+    <value>Hide any</value>
+  </data>
+  <data name="Setting_HideNormal" xml:space="preserve">
+    <value>Hide normal, but show major</value>
+  </data>
+  <data name="Setting_HideType" xml:space="preserve">
+    <value>Hide option</value>
+  </data>
+  <data name="Setting_ToggleShortcut" xml:space="preserve">
+    <value>Toggle visibility</value>
   </data>
 </root>

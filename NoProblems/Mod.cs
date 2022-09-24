@@ -22,7 +22,6 @@ namespace NoProblems
 
         protected override ulong StableWorkshopId => 0ul;
         protected override ulong BetaWorkshopId => 0ul;
-        public override string CrowdinUrl => "https://crowdin.com/translate/macsergey-other-mods/74";
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
@@ -38,6 +37,19 @@ namespace NoProblems
 #endif
         protected override string IdRaw => nameof(NoProblems);
 
+        protected override List<BaseDependencyInfo> DependencyInfos
+        {
+            get
+            {
+                var infos = base.DependencyInfos;
+
+                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(917543381ul)));
+                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(2864220279ul)));
+
+                return infos;
+            }
+        }
+
         protected override ResourceManager LocalizeManager => Localize.ResourceManager;
 
         protected override void GetSettings(UIHelperBase helper)
@@ -50,6 +62,8 @@ namespace NoProblems
         protected override bool PatchProcess()
         {
             var success = true;
+
+            success &= AddPrefix(typeof(Mod), nameof(Mod.NotificationRenderInstancePrefix), typeof(Notification), nameof(Notification.RenderInstance));
 
             return success;
         }
@@ -97,15 +111,53 @@ namespace NoProblems
                 }
             });
         }
+
+        private static void NotificationRenderInstancePrefix(ref ProblemStruct problems)
+        {
+            if (Settings.HidingEnabled)
+            {
+                switch (Settings.HideType)
+                {
+                    case 0:
+                        problems &= Settings.EnabledProblems;
+                        break;
+                    case 1 when (problems & ProblemStruct.MajorOrFatal).IsNone:
+                        problems &= Settings.EnabledProblems;
+                        break;
+                }
+            }
+        }
     }
+
+    public class ThreadingExtension : ThreadingExtensionBase
+    {
+        public override void OnUpdate(float realTimeDelta, float simulationTimeDelta)
+        {
+            if (!UIView.HasModalInput() && !UIView.HasInputFocus() && Settings.ToggleShortcut.IsPressed)
+            {
+                SingletonMod<Mod>.Logger.Debug($"On press shortcut");
+                Settings.HidingEnabled.value = !Settings.HidingEnabled.value;
+            }
+        }
+    }
+    public class NoProblemShortcut : ModShortcut<Mod>
+    {
+        public NoProblemShortcut(string name, string labelKey, InputKey key, Action action = null) : base(name, labelKey, key, action) { }
+    }
+
 
     public class Settings : BaseSettings<Mod>
     {
-        public static ProblemStruct DisabledProblems { get; private set; }
+        public static NoProblemShortcut ToggleShortcut { get; } = new NoProblemShortcut(nameof(ToggleShortcut), nameof(Localize.Setting_ToggleShortcut), SavedInputKey.Encode(KeyCode.N, true, true, false));
+
+        public static ProblemStruct EnabledProblems { get; private set; }
         public static Dictionary<ProblemStruct, SavedBool> Data { get; } = new Dictionary<ProblemStruct, SavedBool>();
+        public static SavedBool HidingEnabled { get; } = new SavedBool(nameof(HidingEnabled), SettingsFile, true, true);
+        public static SavedInt HideType { get; } = new SavedInt(nameof(HideType), SettingsFile, 0, true);
+
         static Settings()
         {
-            DisabledProblems = ProblemStruct.None;
+            EnabledProblems = ProblemStruct.All;
 
             foreach (var problem in ProblemStruct.All)
             {
@@ -118,10 +170,10 @@ namespace NoProblems
 
         private static void Set(ProblemStruct problem, bool disable)
         {
-            if (disable)
-                DisabledProblems |= problem;
+            if (!disable)
+                EnabledProblems |= problem;
             else
-                DisabledProblems &= ~problem;
+                EnabledProblems &= ~problem;
         }
         private static string GetTitle(ProblemStruct problem)
         {
@@ -163,29 +215,72 @@ namespace NoProblems
             else
                 return Group.Other;
         }
+        private static ProblemStruct GetProblems(Group group)
+        {
+            switch (group)
+            {
+                case Group.General: return GeneralProblems;
+                case Group.Other: return OtherProblems;
+                case Group.Сonsumption: return СonsumptionProblems;
+                case Group.NotConnected: return NotConnectedProblems;
+                case Group.Disasters: return DisastersProblems;
+                case Group.Parks: return ParksProblems;
+                case Group.Industry: return IndustryProblems;
+                case Group.Campus: return CampusProblems;
+                case Group.Fishing: return FishingProblems;
+                case Group.Airport: return AirportProblems;
+                case Group.Pedestrian: return PedestrianProblems;
+                default: return ProblemStruct.None;
+            }
+        }
 
         protected override void FillSettings()
         {
             base.FillSettings();
 
+            var checkBoxes = new Dictionary<ProblemStruct, UICheckBox>();
+
+            var generalGroup = GeneralTab.AddGroup(CommonLocalize.Settings_General);
+
+            var keyMapping = AddKeyMappingPanel(generalGroup);
+            keyMapping.AddKeymapping(ToggleShortcut);
+
+            AddCheckboxPanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal });
+
+            generalGroup.AddSpace(15);
+            var generalButtonGroup = AddHorizontalPanel(generalGroup, new RectOffset(5, 5, 0, 0));
+            AddButton(generalButtonGroup, Localize.Settings_DisableAll, () => Switch(checkBoxes, ProblemStruct.All, true), 250, 1f);
+            AddButton(generalButtonGroup, Localize.Settings_EnableAll, () => Switch(checkBoxes, ProblemStruct.All, false), 250, 1f);
+
+
             var groups = new Dictionary<Group, UIHelper>()
             {
-                { Group.General, GeneralTab.AddGroup(CommonLocalize.Settings_General) },
-                { Group.Other,GeneralTab.AddGroup(nameof(Group.Other)) },
-                { Group.Сonsumption,GeneralTab.AddGroup(nameof(Group.Сonsumption)) },
-                { Group.NotConnected,GeneralTab.AddGroup(nameof(Group.NotConnected)) },
-                { Group.Disasters,GeneralTab.AddGroup(nameof(Group.Disasters)) },
-                { Group.Parks,GeneralTab.AddGroup(nameof(Group.Parks)) },
-                { Group.Industry,GeneralTab.AddGroup(nameof(Group.Industry)) },
-                { Group.Campus,GeneralTab.AddGroup(nameof(Group.Campus)) },
-                { Group.Fishing,GeneralTab.AddGroup(nameof(Group.Fishing)) },
-                { Group.Airport,GeneralTab.AddGroup(nameof(Group.Airport)) },
-                { Group.Pedestrian,GeneralTab.AddGroup(nameof(Group.Pedestrian)) },
+                { Group.General, AddGroup(Group.General) },
+                { Group.Other, AddGroup(Group.Other) },
+                { Group.Сonsumption, AddGroup(Group.Сonsumption) },
+                { Group.NotConnected, AddGroup(Group.NotConnected) },
+                { Group.Disasters, AddGroup(Group.Disasters) },
+                { Group.Parks, AddGroup(Group.Parks) },
+                { Group.Industry, AddGroup(Group.Industry) },
+                { Group.Campus, AddGroup(Group.Campus) },
+                { Group.Fishing, AddGroup(Group.Fishing) },
+                { Group.Airport, AddGroup(Group.Airport) },
+                { Group.Pedestrian, AddGroup(Group.Pedestrian) },
             };
+
+            foreach (var groupKV in groups)
+            {
+                var group = groupKV.Key;
+                var helper = groupKV.Value;
+
+                var buttonGroup = AddHorizontalPanel(helper, new RectOffset(5, 5, 0, 0));
+                AddButton(buttonGroup, Localize.Settings_DisableEntireGrope, () => Switch(checkBoxes, GetProblems(group), true), 250, 1f);
+                AddButton(buttonGroup, Localize.Settings_EnableEntireGrope, () => Switch(checkBoxes, GetProblems(group), false), 250, 1f);
+            }
 
             var notificationAtlas = TextureHelper.GetAtlas("Notifications");
 
-            foreach (var problem in ProblemStruct.All)
+            foreach (var problem in ProblemStruct.All & ~Ignore)
             {
                 var title = GetTitle(problem);
                 var icon = GetIcon(problem);
@@ -194,11 +289,23 @@ namespace NoProblems
 
                 var group = groups[GetGroup(problem)];
                 var checkBox = AddCheckBox(group, string.Format(Localize.Setting_DisableProblem, text), saved, () => Set(problem, saved));
+                checkBoxes[problem] = checkBox;
                 var label = checkBox.Find<UILabel>("Label");
                 label.atlas = notificationAtlas;
                 label.processMarkup = true;
                 label.autoSize = false;
                 label.width += 30f;
+            }
+        }
+        private UIHelper AddGroup(Group group) => GeneralTab.AddGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
+        private void Switch(Dictionary<ProblemStruct, UICheckBox> checkBoxes, ProblemStruct problems, bool isChecked)
+        {
+            foreach (var problem in problems)
+            {
+                if (checkBoxes.TryGetValue(problem, out var checkBox))
+                {
+                    checkBox.isChecked = isChecked;
+                }
             }
         }
 
@@ -276,7 +383,6 @@ namespace NoProblems
 
         private static ProblemStruct ParksProblems = new ProblemStruct(
             Problem1.NoPark |
-            Problem1.TooLong |
             Problem1.NoMainGate
             );
 
@@ -316,5 +422,7 @@ namespace NoProblems
             Problem2.NoCargoServicePoint |
             Problem2.NoGarbageServicePoint
             );
+
+        private static ProblemStruct Ignore = new ProblemStruct(Problem1.TooLong);
     }
 }

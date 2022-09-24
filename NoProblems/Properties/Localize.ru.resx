@@ -120,7 +120,64 @@
   <data name="Mod_Description" xml:space="preserve">
     <value>Отключить уведомления о проблемах</value>
   </data>
+  <data name="Settings_AirportGroup" xml:space="preserve">
+    <value>Уведомления аэропортов</value>
+  </data>
+  <data name="Settings_CampusGroup" xml:space="preserve">
+    <value>Уведомления кампусов</value>
+  </data>
+  <data name="Settings_DisableAll" xml:space="preserve">
+    <value>Выключить все</value>
+  </data>
+  <data name="Settings_DisableEntireGrope" xml:space="preserve">
+    <value>Выключить всю группу</value>
+  </data>
+  <data name="Settings_DisastersGroup" xml:space="preserve">
+    <value>Уведомления о катастрофах</value>
+  </data>
+  <data name="Settings_EnableAll" xml:space="preserve">
+    <value>Включеть все</value>
+  </data>
+  <data name="Settings_EnableEntireGrope" xml:space="preserve">
+    <value>Включить всю группу</value>
+  </data>
+  <data name="Settings_FishingGroup" xml:space="preserve">
+    <value>Уведомления рыбной ловли</value>
+  </data>
+  <data name="Settings_GeneralGroup" xml:space="preserve">
+    <value>Основные уведомления</value>
+  </data>
+  <data name="Settings_IndustryGroup" xml:space="preserve">
+    <value>Уведомления промышленности</value>
+  </data>
+  <data name="Settings_NotConnectedGroup" xml:space="preserve">
+    <value>Уведомления об отсутствие подключения</value>
+  </data>
+  <data name="Settings_OtherGroup" xml:space="preserve">
+    <value>Другие уведомления</value>
+  </data>
+  <data name="Settings_ParksGroup" xml:space="preserve">
+    <value>Уведомления парков</value>
+  </data>
+  <data name="Settings_PedestrianGroup" xml:space="preserve">
+    <value>Уведомления пешеходных зон</value>
+  </data>
+  <data name="Settings_СonsumptionGroup" xml:space="preserve">
+    <value>Уведомления о потреблении</value>
+  </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
     <value>Отключить «{0}»</value>
+  </data>
+  <data name="Setting_HideAny" xml:space="preserve">
+    <value>Срывать все</value>
+  </data>
+  <data name="Setting_HideNormal" xml:space="preserve">
+    <value>Скрывать обычные, но показывать серьезные</value>
+  </data>
+  <data name="Setting_HideType" xml:space="preserve">
+    <value>Вариант скрытия</value>
+  </data>
+  <data name="Setting_ToggleShortcut" xml:space="preserve">
+    <value>Переключить видимость</value>
   </data>
 </root>
