@@ -120,6 +120,13 @@
   <data name="Mod_Description" xml:space="preserve">
     <value>Отключить уведомления о проблемах</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
+    <value>[UPDATED] Добавлена поддержка Plazas &amp; Promenades DLC.
+[UPDATED] Добавлены новые уведомления из нескольких последних DLC.
+[NEW] Добавлена возможность скрвать обычные уведомления, но показывать важные.
+[NEW] Добавлена горячая клавиша для переключения видимости уведомлений.
+[UPDATED] Использование Harmony вместо старого способа установки модов.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Уведомления аэропортов</value>
   </data>
