@@ -22,6 +22,7 @@ namespace NoProblems
 
         protected override ulong StableWorkshopId => 0ul;
         protected override ulong BetaWorkshopId => 0ul;
+        public override string CrowdinUrl => "https://crowdin.com/translate/intersection-marking-tool/136";
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
