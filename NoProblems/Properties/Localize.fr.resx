@@ -118,66 +118,66 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Mod_Description" xml:space="preserve">
-    <value>Отключить уведомления о проблемах</value>
+    <value>Désactiver les notifications de problèmes</value>
   </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
-    <value>Уведомления аэропортов</value>
+    <value>Notifications d'aéroport</value>
   </data>
   <data name="Settings_CampusGroup" xml:space="preserve">
-    <value>Уведомления кампусов</value>
+    <value>Notifications de campus</value>
   </data>
   <data name="Settings_DisableAll" xml:space="preserve">
-    <value>Выключить все</value>
+    <value>Tout désactiver</value>
   </data>
   <data name="Settings_DisableEntireGrope" xml:space="preserve">
-    <value>Выключить всю группу</value>
+    <value>Désactiver tout le groupe</value>
   </data>
   <data name="Settings_DisastersGroup" xml:space="preserve">
-    <value>Уведомления о катастрофах</value>
+    <value>Notifications de catastrophes naturelles</value>
   </data>
   <data name="Settings_EnableAll" xml:space="preserve">
-    <value>Включеть все</value>
+    <value>Tout activer</value>
   </data>
   <data name="Settings_EnableEntireGrope" xml:space="preserve">
-    <value>Включить всю группу</value>
+    <value>Activer tout le groupe</value>
   </data>
   <data name="Settings_FishingGroup" xml:space="preserve">
-    <value>Уведомления рыбной ловли</value>
+    <value>Notifications de pêche</value>
   </data>
   <data name="Settings_GeneralGroup" xml:space="preserve">
-    <value>Основные уведомления</value>
+    <value>Notifications générales</value>
   </data>
   <data name="Settings_IndustryGroup" xml:space="preserve">
-    <value>Уведомления промышленности</value>
+    <value>Notifications d'industrie</value>
   </data>
   <data name="Settings_NotConnectedGroup" xml:space="preserve">
-    <value>Уведомления об отсутствие подключения</value>
+    <value>Notifications de réseaux non connectés</value>
   </data>
   <data name="Settings_OtherGroup" xml:space="preserve">
-    <value>Другие уведомления</value>
+    <value>Autres notifications</value>
   </data>
   <data name="Settings_ParksGroup" xml:space="preserve">
-    <value>Уведомления парков</value>
+    <value>Notifications de parcs</value>
   </data>
   <data name="Settings_PedestrianGroup" xml:space="preserve">
-    <value>Уведомления пешеходных зон</value>
+    <value>Notifications de zone piétonne</value>
   </data>
   <data name="Settings_СonsumptionGroup" xml:space="preserve">
-    <value>Уведомления о потреблении</value>
+    <value>Notifications de consommation</value>
   </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
-    <value>Отключить «{0}»</value>
+    <value>Désactiver "{0}"</value>
   </data>
   <data name="Setting_HideAny" xml:space="preserve">
-    <value>Срывать все</value>
+    <value>Masquer toutes</value>
   </data>
   <data name="Setting_HideNormal" xml:space="preserve">
-    <value>Скрывать обычные, но показывать серьезные</value>
+    <value>Cacher les notifications normales, mais montrer les notifications majeures</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
-    <value>Вариант скрытия</value>
+    <value>Masquer l'option</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
-    <value>Переключить видимость</value>
+    <value>Activer/Désactiver la visibilité</value>
   </data>
 </root>

@@ -118,66 +118,66 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Mod_Description" xml:space="preserve">
-    <value>Отключить уведомления о проблемах</value>
+    <value>問題の通知を無効化</value>
   </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
-    <value>Уведомления аэропортов</value>
+    <value>空港の通知</value>
   </data>
   <data name="Settings_CampusGroup" xml:space="preserve">
-    <value>Уведомления кампусов</value>
+    <value>キャンパスの通知</value>
   </data>
   <data name="Settings_DisableAll" xml:space="preserve">
-    <value>Выключить все</value>
+    <value>全て無効化</value>
   </data>
   <data name="Settings_DisableEntireGrope" xml:space="preserve">
-    <value>Выключить всю группу</value>
+    <value>グループ全体で無効化</value>
   </data>
   <data name="Settings_DisastersGroup" xml:space="preserve">
-    <value>Уведомления о катастрофах</value>
+    <value>災害の通知</value>
   </data>
   <data name="Settings_EnableAll" xml:space="preserve">
-    <value>Включеть все</value>
+    <value>全て有効化</value>
   </data>
   <data name="Settings_EnableEntireGrope" xml:space="preserve">
-    <value>Включить всю группу</value>
+    <value>グループ全体で有効化</value>
   </data>
   <data name="Settings_FishingGroup" xml:space="preserve">
-    <value>Уведомления рыбной ловли</value>
+    <value>漁業の通知</value>
   </data>
   <data name="Settings_GeneralGroup" xml:space="preserve">
-    <value>Основные уведомления</value>
+    <value>全般の通知</value>
   </data>
   <data name="Settings_IndustryGroup" xml:space="preserve">
-    <value>Уведомления промышленности</value>
+    <value>産業の通知</value>
   </data>
   <data name="Settings_NotConnectedGroup" xml:space="preserve">
-    <value>Уведомления об отсутствие подключения</value>
+    <value>未接続の通知</value>
   </data>
   <data name="Settings_OtherGroup" xml:space="preserve">
-    <value>Другие уведомления</value>
+    <value>その他の通知</value>
   </data>
   <data name="Settings_ParksGroup" xml:space="preserve">
-    <value>Уведомления парков</value>
+    <value>パークの通知</value>
   </data>
   <data name="Settings_PedestrianGroup" xml:space="preserve">
-    <value>Уведомления пешеходных зон</value>
+    <value>歩行者エリアの通知</value>
   </data>
   <data name="Settings_СonsumptionGroup" xml:space="preserve">
-    <value>Уведомления о потреблении</value>
+    <value>消費者の通知</value>
   </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
-    <value>Отключить «{0}»</value>
+    <value>"{0}" を無効化</value>
   </data>
   <data name="Setting_HideAny" xml:space="preserve">
-    <value>Срывать все</value>
+    <value>いずれかを非表示</value>
   </data>
   <data name="Setting_HideNormal" xml:space="preserve">
-    <value>Скрывать обычные, но показывать серьезные</value>
+    <value>通常は非表示で、重要な通知は表示</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
-    <value>Вариант скрытия</value>
+    <value>非表示のオプション</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
-    <value>Переключить видимость</value>
+    <value>表示の切り替え</value>
   </data>
 </root>
