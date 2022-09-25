@@ -120,6 +120,17 @@
   <data name="Mod_Description" xml:space="preserve">
     <value>Vypnout upozornění na problémy</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
+    <value>[UPDATED] Přidána podpora DLC Plaza &amp; Promenades.
+[UPDATED] Přidána nová oznámení z několika posledních DLC.
+[NEW] Přidána možnost skrýt běžná oznámení, ale zobrazovat hlavní oznámení.
+[NEW] Přidána zkratka pro přepínání viditelnosti oznámení.
+[UPDATED] Použití Harmony namísto starého systému záplatování.</value>
+  </data>
+  <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
+    <value>[UPDATED] Přidána možnost odstranit problémové příznaky úplně, což ovlivní chování budov. Může být nastaveno v nastavení módu.
+[TRANSLATION] Přidán Rumunský překlad.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Letištní oznámení</value>
   </data>
@@ -171,11 +182,19 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Skrýt jakékoliv</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — tato možnost pouze skryje oznámení, ale chování budov je zachováno.
+{1} — stejná možnost, ale pouze nezásadní oznámení budou skryty.
+{2} — tato možnost mění chování budov, zabraňuje přidávání problémových příznaků do budov.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Skrýt běžné, ale zobrazit hlavní</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
     <value>Skrýt volbu</value>
+  </data>
+  <data name="Setting_Remove" xml:space="preserve">
+    <value>Odstranit problémové příznaky</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
     <value>Přepnout viditelnost</value>

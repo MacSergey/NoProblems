@@ -182,11 +182,6 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Ascunde tot</value>
   </data>
-  <data name="Setting_HideDescription" xml:space="preserve">
-    <value>{0} - Această opțiune afișează doar notificările referitoare la clădiri.
-{1} - Aceeași opțiune, afișând doar cele mai importante.
-{2} - Această opțiune schimbă comportamentul clădirilor, împiedicând crearea problemelor.</value>
-  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Ascunde notificările obișnuite, dar nu alea majore</value>
   </data>

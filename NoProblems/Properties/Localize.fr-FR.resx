@@ -118,85 +118,80 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Mod_Description" xml:space="preserve">
-    <value>Dezactivează notificările referitor problemelor</value>
+    <value>Désactiver les notifications de problèmes</value>
   </data>
   <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
-    <value>[UPDATED] Adăugat suportul pentru Plazas &amp; Promenades DLC.
-[UPDATED] Adăugate notificări noi de la ultimele DLC-uri.
-[NEW] Adăugată opțiunea de a ascund notificările normale, afișând notificările mai importante.
-[NEW] Adăugată comanda rapidă pentru a afișa/ascunde notificările.
-[UPDATED] Modul acesta acum folosește Harmony în loc de vechiul sistem de patching.</value>
+    <value>[UPDATED] Ajout du support du DLC Plaza &amp; Promenades.
+[UPDATED] Ajout de nouvelles notifications de plusieurs DLC récents.
+[NEW] Ajout de la possibilité de masquer les notifications normales, mais d'afficher les notifications majeures.
+[NEW] Ajout d'un raccourci pour modifier la visibilité des notifications.
+[UPDATED] Utilisation d'Harmony au lieu de l'ancien système de patchs.</value>
   </data>
   <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
-    <value>[UPDATED] Adăugată opțiunea de a elimina crearea problemelor, afectând toate clădirile. Aceasta poate fi setată prin setările modului.
-[TRANSLATION] A fost adăugată limba română.</value>
+    <value>[UPDATED] Ajout de la possibilité de supprimer complètement les signaux de problèmes, ce qui affectera le comportement des bâtiments. Cette option peut être activée dans les paramètres du mod.
+[TRANSLATION] Ajout de la traduction roumaine.</value>
   </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
-    <value>Notificări aeroport</value>
+    <value>Notifications d'aéroport</value>
   </data>
   <data name="Settings_CampusGroup" xml:space="preserve">
-    <value>Notificări campus</value>
+    <value>Notifications de campus</value>
   </data>
   <data name="Settings_DisableAll" xml:space="preserve">
-    <value>Dezactivează toate notificările</value>
+    <value>Tout désactiver</value>
   </data>
   <data name="Settings_DisableEntireGrope" xml:space="preserve">
-    <value>Dezactivează întregul grup</value>
+    <value>Désactiver tout le groupe</value>
   </data>
   <data name="Settings_DisastersGroup" xml:space="preserve">
-    <value>Notificări dezastre</value>
+    <value>Notifications de catastrophes naturelles</value>
   </data>
   <data name="Settings_EnableAll" xml:space="preserve">
-    <value>Activează toate notificările</value>
+    <value>Tout activer</value>
   </data>
   <data name="Settings_EnableEntireGrope" xml:space="preserve">
-    <value>Activează întregul grup</value>
+    <value>Activer tout le groupe</value>
   </data>
   <data name="Settings_FishingGroup" xml:space="preserve">
-    <value>Notificări pește</value>
+    <value>Notifications de pêche</value>
   </data>
   <data name="Settings_GeneralGroup" xml:space="preserve">
-    <value>Notificări generale</value>
+    <value>Notifications générales</value>
   </data>
   <data name="Settings_IndustryGroup" xml:space="preserve">
-    <value>Notificări industrie</value>
+    <value>Notifications d'industrie</value>
   </data>
   <data name="Settings_NotConnectedGroup" xml:space="preserve">
-    <value>Notificări obiecte neconectate</value>
+    <value>Notifications de réseaux non connectés</value>
   </data>
   <data name="Settings_OtherGroup" xml:space="preserve">
-    <value>Alte notificări</value>
+    <value>Autres notifications</value>
   </data>
   <data name="Settings_ParksGroup" xml:space="preserve">
-    <value>Notificări parc</value>
+    <value>Notifications de parcs</value>
   </data>
   <data name="Settings_PedestrianGroup" xml:space="preserve">
-    <value>Notificări zonă pietonală</value>
+    <value>Notifications de zone piétonne</value>
   </data>
   <data name="Settings_СonsumptionGroup" xml:space="preserve">
-    <value>Notificări consum</value>
+    <value>Notifications de consommation</value>
   </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
-    <value>Dezactivează "{0}"</value>
+    <value>Désactiver "{0}"</value>
   </data>
   <data name="Setting_HideAny" xml:space="preserve">
-    <value>Ascunde tot</value>
-  </data>
-  <data name="Setting_HideDescription" xml:space="preserve">
-    <value>{0} - Această opțiune afișează doar notificările referitoare la clădiri.
-{1} - Aceeași opțiune, afișând doar cele mai importante.
-{2} - Această opțiune schimbă comportamentul clădirilor, împiedicând crearea problemelor.</value>
+    <value>Masquer toutes</value>
   </data>
   <data name="Setting_HideNormal" xml:space="preserve">
-    <value>Ascunde notificările obișnuite, dar nu alea majore</value>
+    <value>Masquer les notifications normales, mais montrer les notifications majeures</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
-    <value>Ascunde opțiunea</value>
+    <value>Masquer l'option</value>
   </data>
   <data name="Setting_Remove" xml:space="preserve">
-    <value>Împiedică crearea problemelor</value>
+    <value>Supprimer les signaux de problèmes</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
-    <value>Comută vizibilitatea notificărilor</value>
+    <value>Activer/Désactiver la visibilité</value>
   </data>
 </root>

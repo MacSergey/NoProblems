@@ -120,6 +120,17 @@
   <data name="Mod_Description" xml:space="preserve">
     <value>Désactiver les notifications de problèmes</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
+    <value>[UPDATED] Ajout du support du DLC Plaza &amp; Promenades.
+[UPDATED] Ajout de nouvelles notifications de plusieurs DLC récents.
+[NEW] Ajout de la possibilité de masquer les notifications normales, mais d'afficher les notifications majeures.
+[NEW] Ajout d'un raccourci pour modifier la visibilité des notifications.
+[UPDATED] Utilisation d'Harmony au lieu de l'ancien système de patchs.</value>
+  </data>
+  <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
+    <value>[UPDATED] Ajout de la possibilité de supprimer complètement les signaux de problèmes, ce qui affectera le comportement des bâtiments. Cette option peut être activée dans les paramètres du mod.
+[TRANSLATION] Ajout de la traduction roumaine.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Notifications d'aéroport</value>
   </data>
@@ -171,11 +182,19 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Masquer toutes</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — cette option ne fait que cacher les notifications, mais le comportement des bâtiments est conservé.
+{1} — la même option, mais seules les notifications non majeures seront cachées.
+{2} — cette option change le comportement des bâtiments, elle empêche l'ajout de signaux de problèmes aux bâtiments.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
-    <value>Cacher les notifications normales, mais montrer les notifications majeures</value>
+    <value>Masquer les notifications normales, mais montrer les notifications majeures</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
     <value>Masquer l'option</value>
+  </data>
+  <data name="Setting_Remove" xml:space="preserve">
+    <value>Supprimer les signaux de problèmes</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
     <value>Activer/Désactiver la visibilité</value>
