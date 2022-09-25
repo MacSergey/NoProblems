@@ -101,6 +101,17 @@ namespace NoProblems {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на {0} —  this options just hide any notifications, but buildings behavior is keeped.
+        ///{1} —  the same option, but only not major notifications will be hidden.
+        ///{2} —  this option change buildings behavior, it prevents adding problem flags to buildings..
+        /// </summary>
+        public static string Setting_HideDescription {
+            get {
+                return ResourceManager.GetString("Setting_HideDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Hide normal, but show major.
         /// </summary>
         public static string Setting_HideNormal {
@@ -115,6 +126,15 @@ namespace NoProblems {
         public static string Setting_HideType {
             get {
                 return ResourceManager.GetString("Setting_HideType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Remove problem flags.
+        /// </summary>
+        public static string Setting_Remove {
+            get {
+                return ResourceManager.GetString("Setting_Remove", resourceCulture);
             }
         }
         

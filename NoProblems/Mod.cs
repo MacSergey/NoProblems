@@ -65,26 +65,30 @@ namespace NoProblems
             var success = true;
 
             success &= AddPrefix(typeof(Mod), nameof(Mod.NotificationRenderInstancePrefix), typeof(Notification), nameof(Notification.RenderInstance));
+            success &= AddPrefix(typeof(Mod), nameof(Mod.NotificationAddProblemsPrefix), typeof(Notification), nameof(Notification.AddProblems));
 
             return success;
         }
 
-        private void RemoveExistingProblems(ProblemStruct problem)
+        public void RemoveExistingProblems(ProblemStruct disabledProblems)
         {
+            Logger.Debug("Start removing existing problems");
+
             Singleton<SimulationManager>.instance.AddAction(() =>
             {
                 var buildingBuffer = Singleton<BuildingManager>.instance.m_buildings.m_buffer;
                 for (ushort i = 0; i < buildingBuffer.Length; i += 1)
                 {
-                    if (buildingBuffer[i].m_flags != 0)
+                    if ((buildingBuffer[i].m_flags & Building.Flags.Created) != 0)
                     {
                         var oldProblems = buildingBuffer[i].m_problems;
-                        if (oldProblems.IsNone)
+                        if (oldProblems.IsNotNone)
                         {
-                            var newProblems = Notification.RemoveProblems(oldProblems, problem);
+                            var newProblems = Notification.RemoveProblems(oldProblems, disabledProblems);
 
                             if (newProblems != oldProblems)
                             {
+                                Logger.Debug($"Remove problems from building #{i}");
                                 buildingBuffer[i].m_problems = newProblems;
                                 Singleton<BuildingManager>.instance.UpdateNotifications(i, oldProblems, newProblems);
                             }
@@ -92,25 +96,28 @@ namespace NoProblems
                     }
                 }
 
-                var nodeBuffer = Singleton<NetManager>.instance.m_nodes.m_buffer;
-                for (ushort i = 0; i < nodeBuffer.Length; i += 1)
-                {
-                    if (nodeBuffer[i].m_flags != 0)
-                    {
-                        var oldProblems = nodeBuffer[i].m_problems;
-                        if (oldProblems.IsNone)
-                        {
-                            var newProblems = Notification.RemoveProblems(oldProblems, problem);
+                //var nodeBuffer = Singleton<NetManager>.instance.m_nodes.m_buffer;
+                //for (ushort i = 0; i < nodeBuffer.Length; i += 1)
+                //{
+                //    if ((nodeBuffer[i].m_flags & NetNode.Flags.Created) != 0)
+                //    {
+                //        var oldProblems = nodeBuffer[i].m_problems;
+                //        if (oldProblems.IsNotNone)
+                //        {
+                //            var newProblems = Notification.RemoveProblems(oldProblems, disabledProblems);
 
-                            if (nodeBuffer[i].m_problems != oldProblems)
-                            {
-                                nodeBuffer[i].m_problems = newProblems;
-                                Singleton<NetManager>.instance.UpdateNodeNotifications(i, oldProblems, newProblems);
-                            }
-                        }
-                    }
-                }
+                //            if (newProblems != oldProblems)
+                //            {
+                //                Logger.Debug($"Remove problems from node #{i}");
+                //                nodeBuffer[i].m_problems = newProblems;
+                //                Singleton<NetManager>.instance.UpdateNodeNotifications(i, oldProblems, newProblems);
+                //            }
+                //        }
+                //    }
+                //}
             });
+
+            Logger.Debug("Finish removing existing problems");
         }
 
         private static void NotificationRenderInstancePrefix(ref ProblemStruct problems)
@@ -120,6 +127,7 @@ namespace NoProblems
                 switch (Settings.HideType)
                 {
                     case 0:
+                    case 2:
                         problems &= Settings.EnabledProblems;
                         break;
                     case 1 when (problems & ProblemStruct.MajorOrFatal).IsNone:
@@ -127,6 +135,11 @@ namespace NoProblems
                         break;
                 }
             }
+        }
+        private static void NotificationAddProblemsPrefix(ref ProblemStruct problems2)
+        {
+            if (Settings.HideType == 2)
+                problems2 &= Settings.EnabledProblems;
         }
     }
 
@@ -141,6 +154,15 @@ namespace NoProblems
             }
         }
     }
+    public class LoadingExtension : LoadingExtensionBase
+    {
+        public override void OnLevelLoaded(LoadMode mode)
+        {
+            if (mode == LoadMode.LoadGame || mode == LoadMode.NewGame || mode == LoadMode.NewGameFromScenario)
+                SingletonMod<Mod>.Instance.RemoveExistingProblems(~Settings.EnabledProblems);
+        }
+    }
+
     public class NoProblemShortcut : ModShortcut<Mod>
     {
         public NoProblemShortcut(string name, string labelKey, InputKey key, Action action = null) : base(name, labelKey, key, action) { }
@@ -246,7 +268,8 @@ namespace NoProblems
             var keyMapping = AddKeyMappingPanel(generalGroup);
             keyMapping.AddKeymapping(ToggleShortcut);
 
-            AddCheckboxPanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal });
+            AddCheckboxPanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
+            AddLabel(generalGroup, string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove), 0.8f, new Color32(255, 215, 81, 255), 25);
 
             generalGroup.AddSpace(15);
             var generalButtonGroup = AddHorizontalPanel(generalGroup, new RectOffset(5, 5, 0, 0));
@@ -289,7 +312,7 @@ namespace NoProblems
                 var saved = Data[problem];
 
                 var group = groups[GetGroup(problem)];
-                var checkBox = AddCheckBox(group, string.Format(Localize.Setting_DisableProblem, text), saved, () => Set(problem, saved));
+                var checkBox = AddCheckBox(group, string.Format(Localize.Setting_DisableProblem, text), saved, () => { Set(problem, saved); OnDisabledChanged(); });
                 checkBoxes[problem] = checkBox;
                 var label = checkBox.Find<UILabel>("Label");
                 label.atlas = notificationAtlas;
@@ -299,8 +322,16 @@ namespace NoProblems
             }
         }
         private UIHelper AddGroup(Group group) => GeneralTab.AddGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
+
+        private bool SwitchInProgress { get; set; } = false;
+        private void OnDisabledChanged()
+        {
+            if (!SwitchInProgress && HideType == 2)
+                SingletonMod<Mod>.Instance.RemoveExistingProblems(~EnabledProblems);
+        }
         private void Switch(Dictionary<ProblemStruct, UICheckBox> checkBoxes, ProblemStruct problems, bool isChecked)
         {
+            SwitchInProgress = true;
             foreach (var problem in problems)
             {
                 if (checkBoxes.TryGetValue(problem, out var checkBox))
@@ -308,6 +339,10 @@ namespace NoProblems
                     checkBox.isChecked = isChecked;
                 }
             }
+            SwitchInProgress = false;
+
+            if (isChecked)
+                OnDisabledChanged();
         }
 
         private enum Group
