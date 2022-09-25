@@ -83,6 +83,16 @@ namespace NoProblems {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на [UPDATED] Added the ability to remove problem flags at all, which will affect buildings behavior. Could be set in the mod settings.
+        ///[TRANSLATION] Added Romanian translation..
+        /// </summary>
+        public static string Mod_WhatsNewMessage2_1 {
+            get {
+                return ResourceManager.GetString("Mod_WhatsNewMessage2_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Disable &quot;{0}&quot;.
         /// </summary>
         public static string Setting_DisableProblem {

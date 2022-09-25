@@ -127,6 +127,10 @@
 [NEW] Added shortcut for toggling notifications visibility.
 [UPDATED] Using Harmony instead of old patching system.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
+    <value>[UPDATED] Added the ability to remove problem flags at all, which will affect buildings behavior. Could be set in the mod settings.
+[TRANSLATION] Added Romanian translation.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Airport notifications</value>
   </data>

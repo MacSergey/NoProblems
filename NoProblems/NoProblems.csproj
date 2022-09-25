@@ -17,7 +17,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
-		<Version>2.0</Version>
+		<Version>2.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Beta Release' OR '$(Configuration)' == 'Beta Debug'">
@@ -55,7 +55,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Remove="Properties\Localize.ro.resx" />
+	  <EmbeddedResource Remove="Properties\Localize.pt.resx" />
 	</ItemGroup>
 
 
@@ -112,6 +112,7 @@
 	<Import Project="..\ModsCommon\LocalizeShared\ja\LocalizeShared.ja.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\fr\LocalizeShared.fr.projitems" Label="Shared" />
 	<Import Project="..\ModsCommon\LocalizeShared\cs\LocalizeShared.cs.projitems" Label="Shared" />
+	<Import Project="..\ModsCommon\LocalizeShared\ro\LocalizeShared.ro.projitems" Label="Shared" />
 
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
