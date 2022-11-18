@@ -182,6 +182,11 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Masquer toutes</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — cette option ne fait que cacher les notifications, mais le comportement des bâtiments est conservé.
+{1} — la même option, mais seules les notifications non majeures seront cachées.
+{2} — cette option change le comportement des bâtiments, elle empêche l'ajout de signaux de problèmes aux bâtiments.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Masquer les notifications normales, mais montrer les notifications majeures</value>
   </data>

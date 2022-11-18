@@ -182,6 +182,11 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Skrýt jakékoliv</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — tato možnost pouze skryje oznámení, ale chování budov je zachováno.
+{1} — stejná možnost, ale pouze nezásadní oznámení budou skryty.
+{2} — tato možnost mění chování budov, zabraňuje přidávání problémových příznaků do budov.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Skrýt běžné, ale zobrazit hlavní</value>
   </data>

@@ -182,6 +182,11 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Ocultar cualquiera</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} —  Solo oculta las notificaciones, manteniendo el comportamiento de los edificios.
+{1} —  Solo se ocultarán notificaciones no importantes, manteniendo el comportamiento de los edificios.
+{2} —  Cambia el comportamiento de los edificios impidiendo agregar notificaciones de problemas a los edificios.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Ocultar normales, pero mostrar importantes</value>
   </data>

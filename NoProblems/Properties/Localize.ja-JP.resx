@@ -182,6 +182,11 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>いずれかを非表示</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} - このオプションは全ての通知を非表示にしますが、建物の動作が維持されます。
+{1} - 同じオプションですが、重要でない通知のみが非表示になります。
+{2} - このオプションは建物の動作を変更して、建物に問題フラグを追加しません。</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>通常は非表示で、重要な通知は表示</value>
   </data>
