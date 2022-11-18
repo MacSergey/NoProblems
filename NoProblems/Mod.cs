@@ -52,7 +52,7 @@ namespace NoProblems
             }
         }
 
-        protected override ResourceManager LocalizeManager => Localize.ResourceManager;
+        protected override LocalizeManager LocalizeManager => Localize.LocaleManager;
 
         protected override void GetSettings(UIHelperBase helper)
         {
