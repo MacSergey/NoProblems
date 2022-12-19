@@ -182,6 +182,11 @@
   <data name="Setting_HideAny" xml:space="preserve">
     <value>Ukryj dowolne</value>
   </data>
+  <data name="Setting_HideDescription" xml:space="preserve">
+    <value>{0} — ta opcja po prostu ukryje wszystkie powiadomienia, ale zachowanie budynków jest niezmienione.
+{1} — ta sama opcja, ale tylko nie główne powiadomienia zostaną ukryte.
+{2} — ta opcja zmienia zachowanie budynków, zapobiega dodawaniu flag problemów do budynków.</value>
+  </data>
   <data name="Setting_HideNormal" xml:space="preserve">
     <value>Ukryj normalne, ale pokaż główne</value>
   </data>
