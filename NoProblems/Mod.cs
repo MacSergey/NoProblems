@@ -12,6 +12,7 @@ using static RenderManager;
 using static ColossalFramework.EnumExtensions;
 using ColossalFramework.UI;
 using ModsCommon.Utilities;
+using ModsCommon.UI;
 
 namespace NoProblems
 {
@@ -263,34 +264,35 @@ namespace NoProblems
             base.FillSettings();
             AddLanguage(GeneralTab);
 
-            var checkBoxes = new Dictionary<ProblemStruct, UICheckBox>();
-            var generalGroup = GeneralTab.AddGroup(CommonLocalize.Settings_General);
+            var toggles = new Dictionary<ProblemStruct, ToggleSettingsItem>();
+            var generalGroup = GeneralTab.AddOptionsGroup(CommonLocalize.Settings_General);
 
-            var keyMapping = AddKeyMappingPanel(generalGroup);
-            keyMapping.AddKeymapping(ToggleShortcut);
+            AddKeyMappingButton(generalGroup, ToggleShortcut);
 
-            AddCheckboxPanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
-            AddLabel(generalGroup, string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove), 0.8f, new Color32(255, 215, 81, 255), 25);
+            AddTogglePanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
+            var descrItem = AddLabel(generalGroup, string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove), 0.8f, new Color32(255, 215, 81, 255));
+            descrItem.Borders = SettingsContentItem.Border.None;
 
-            generalGroup.AddSpace(15);
-            var generalButtonGroup = AddHorizontalPanel(generalGroup, new RectOffset(5, 5, 0, 0));
-            AddButton(generalButtonGroup, Localize.Settings_DisableAll, () => Switch(checkBoxes, ProblemStruct.All, true), 250, 1f);
-            AddButton(generalButtonGroup, Localize.Settings_EnableAll, () => Switch(checkBoxes, ProblemStruct.All, false), 250, 1f);
+            AddSpace(generalGroup, 15f);
+
+            var buttonPanel = AddButtonPanel(generalGroup, new RectOffset(0, 0, 5, 5), 10);
+            AddButton(buttonPanel, Localize.Settings_DisableAll, () => Switch(toggles, ProblemStruct.All, true), 250, 1f);
+            AddButton(buttonPanel, Localize.Settings_EnableAll, () => Switch(toggles, ProblemStruct.All, false), 250, 1f);
 
 
             var groups = new Dictionary<Group, UIHelper>()
             {
-                { Group.General, AddGroup(Group.General) },
-                { Group.Other, AddGroup(Group.Other) },
-                { Group.Сonsumption, AddGroup(Group.Сonsumption) },
-                { Group.NotConnected, AddGroup(Group.NotConnected) },
-                { Group.Disasters, AddGroup(Group.Disasters) },
-                { Group.Parks, AddGroup(Group.Parks) },
-                { Group.Industry, AddGroup(Group.Industry) },
-                { Group.Campus, AddGroup(Group.Campus) },
-                { Group.Fishing, AddGroup(Group.Fishing) },
-                { Group.Airport, AddGroup(Group.Airport) },
-                { Group.Pedestrian, AddGroup(Group.Pedestrian) },
+                { Group.General, AddOptionsGroup(Group.General) },
+                { Group.Other, AddOptionsGroup(Group.Other) },
+                { Group.Сonsumption, AddOptionsGroup(Group.Сonsumption) },
+                { Group.NotConnected, AddOptionsGroup(Group.NotConnected) },
+                { Group.Disasters, AddOptionsGroup(Group.Disasters) },
+                { Group.Parks, AddOptionsGroup(Group.Parks) },
+                { Group.Industry, AddOptionsGroup(Group.Industry) },
+                { Group.Campus, AddOptionsGroup(Group.Campus) },
+                { Group.Fishing, AddOptionsGroup(Group.Fishing) },
+                { Group.Airport, AddOptionsGroup(Group.Airport) },
+                { Group.Pedestrian, AddOptionsGroup(Group.Pedestrian) },
             };
 
             foreach (var groupKV in groups)
@@ -298,9 +300,9 @@ namespace NoProblems
                 var group = groupKV.Key;
                 var helper = groupKV.Value;
 
-                var buttonGroup = AddHorizontalPanel(helper, new RectOffset(5, 5, 0, 0));
-                AddButton(buttonGroup, Localize.Settings_DisableEntireGrope, () => Switch(checkBoxes, GetProblems(group), true), 250, 1f);
-                AddButton(buttonGroup, Localize.Settings_EnableEntireGrope, () => Switch(checkBoxes, GetProblems(group), false), 250, 1f);
+                var buttonGroup = AddButtonPanel(helper, new RectOffset(0, 0, 5, 15), 10);
+                AddButton(buttonGroup, Localize.Settings_DisableEntireGrope, () => Switch(toggles, GetProblems(group), true), 250, 1f);
+                AddButton(buttonGroup, Localize.Settings_EnableEntireGrope, () => Switch(toggles, GetProblems(group), false), 250, 1f);
             }
 
             var notificationAtlas = TextureHelper.GetAtlas("Notifications");
@@ -313,16 +315,19 @@ namespace NoProblems
                 var saved = Data[problem];
 
                 var group = groups[GetGroup(problem)];
-                var checkBox = AddCheckBox(group, string.Format(Localize.Setting_DisableProblem, text), saved, () => { Set(problem, saved); OnDisabledChanged(); });
-                checkBoxes[problem] = checkBox;
-                var label = checkBox.Find<UILabel>("Label");
-                label.atlas = notificationAtlas;
-                label.processMarkup = true;
-                label.autoSize = false;
-                label.width += 30f;
+                var toggle = AddToggle(group, string.Format(Localize.Setting_DisableProblem, text), saved);
+                toggle.LabelItem.atlas = notificationAtlas;
+                toggle.LabelItem.processMarkup = true;
+                toggle.Control.OnStateChanged += (value) =>
+                {
+                    Set(problem, saved);
+                    OnDisabledChanged();
+                };
+
+                toggles[problem] = toggle;
             }
         }
-        private UIHelper AddGroup(Group group) => GeneralTab.AddGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
+        private UIHelper AddOptionsGroup(Group group) => GeneralTab.AddOptionsGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
 
         private bool SwitchInProgress { get; set; } = false;
         private void OnDisabledChanged()
@@ -330,19 +335,17 @@ namespace NoProblems
             if (!SwitchInProgress && HideType == 2)
                 SingletonMod<Mod>.Instance.RemoveExistingProblems(~EnabledProblems);
         }
-        private void Switch(Dictionary<ProblemStruct, UICheckBox> checkBoxes, ProblemStruct problems, bool isChecked)
+        private void Switch(Dictionary<ProblemStruct, ToggleSettingsItem> toggles, ProblemStruct problems, bool state)
         {
             SwitchInProgress = true;
             foreach (var problem in problems)
             {
-                if (checkBoxes.TryGetValue(problem, out var checkBox))
-                {
-                    checkBox.isChecked = isChecked;
-                }
+                if (toggles.TryGetValue(problem, out var toggle))
+                    toggle.State = state;
             }
             SwitchInProgress = false;
 
-            if (isChecked)
+            if (state)
                 OnDisabledChanged();
         }
 
@@ -401,6 +404,7 @@ namespace NoProblems
 
         private static ProblemStruct NotConnectedProblems = new ProblemStruct(
             Problem1.RoadNotConnected |
+            Problem1.ElectricityNotConnected |
             Problem1.WaterNotConnected |
             Problem1.LineNotConnected |
             Problem1.DepotNotConnected |
