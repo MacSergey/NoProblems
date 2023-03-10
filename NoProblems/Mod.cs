@@ -270,8 +270,12 @@ namespace NoProblems
             AddKeyMappingButton(generalGroup, ToggleShortcut);
 
             AddTogglePanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
-            var descrItem = AddLabel(generalGroup, string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove), 0.8f, new Color32(255, 215, 81, 255));
+
+            var color = new Color32(255, 215, 81, 255);
+            var description = string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny.AddColor(color), Localize.Setting_HideNormal.AddColor(color), Localize.Setting_Remove.AddColor(color));
+            var descrItem = AddLabel(generalGroup, description, 0.8f);
             descrItem.Borders = SettingsContentItem.Border.None;
+            descrItem.LabelItem.processMarkup = true;
 
             AddSpace(generalGroup, 15f);
 
