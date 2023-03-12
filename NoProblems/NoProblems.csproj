@@ -68,6 +68,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="PreviewImage.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="PreviewImage.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Include="Properties\Localize.cs-CZ.resx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

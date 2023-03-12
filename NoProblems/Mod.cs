@@ -1,14 +1,13 @@
 ﻿using ColossalFramework;
 using ICities;
 using ModsCommon;
+using ModsCommon.Settings;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Resources;
 using UnityEngine;
 using static Notification;
-using static ModsCommon.SettingsHelper;
-using static RenderManager;
+using static ModsCommon.Settings.Helper;
 using static ColossalFramework.EnumExtensions;
 using ColossalFramework.UI;
 using ModsCommon.Utilities;
@@ -203,12 +202,19 @@ namespace NoProblems
         private static string GetTitle(ProblemStruct problem)
         {
             if ((problem & (new ProblemStruct(Problem1.StructureVisited | Problem1.StructureVisitedService))).IsNotNone)
-                return ColossalFramework.Globalization.Locale.Get("NOTIFICATION_VISITED");
+            {
+                if (ColossalFramework.Globalization.Locale.Exists("NOTIFICATION_VISITED"))
+                    return ColossalFramework.Globalization.Locale.Get("NOTIFICATION_VISITED");
+                else
+                    return Problem1.StructureVisited.ToString();
+            }
             else
             {
                 var key = problem.m_Problems1 != Problem1.None ? problem.m_Problems1.Name("Text") : problem.m_Problems2.Name("Text");
-                var title = ColossalFramework.Globalization.Locale.Get("NOTIFICATION_TITLE", key).Trim();
-                return title;
+                if (ColossalFramework.Globalization.Locale.Exists("NOTIFICATION_TITLE", key))
+                    return ColossalFramework.Globalization.Locale.Get("NOTIFICATION_TITLE", key).Trim();
+                else
+                    return key;
             }
         }
         private static string GetIcon(ProblemStruct problem)
@@ -267,24 +273,24 @@ namespace NoProblems
             var toggles = new Dictionary<ProblemStruct, ToggleSettingsItem>();
             var generalGroup = GeneralTab.AddOptionsGroup(CommonLocalize.Settings_General);
 
-            AddKeyMappingButton(generalGroup, ToggleShortcut);
+            generalGroup.AddKeyMappingButton(ToggleShortcut);
 
-            AddTogglePanel(generalGroup, Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
+            generalGroup.AddTogglePanel(Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
 
             var color = new Color32(255, 215, 81, 255);
             var description = string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny.AddColor(color), Localize.Setting_HideNormal.AddColor(color), Localize.Setting_Remove.AddColor(color));
-            var descrItem = AddLabel(generalGroup, description, 0.8f);
+            var descrItem = generalGroup.AddLabel(description, 0.8f);
             descrItem.Borders = SettingsContentItem.Border.None;
             descrItem.LabelItem.processMarkup = true;
 
-            AddSpace(generalGroup, 15f);
+            generalGroup.AddSpace(15f);
 
-            var buttonPanel = AddButtonPanel(generalGroup, new RectOffset(0, 0, 5, 5), 10);
-            AddButton(buttonPanel, Localize.Settings_DisableAll, () => Switch(toggles, ProblemStruct.All, true), 250, 1f);
-            AddButton(buttonPanel, Localize.Settings_EnableAll, () => Switch(toggles, ProblemStruct.All, false), 250, 1f);
+            var buttonPanel = generalGroup.AddButtonPanel(new RectOffset(0, 0, 5, 5), 10);
+            buttonPanel.AddButton(Localize.Settings_DisableAll, () => Switch(toggles, ProblemStruct.All, true), 250, 1f);
+            buttonPanel.AddButton(Localize.Settings_EnableAll, () => Switch(toggles, ProblemStruct.All, false), 250, 1f);
 
 
-            var groups = new Dictionary<Group, UIHelper>()
+            var groups = new Dictionary<Group, CustomUIPanel>()
             {
                 { Group.General, AddOptionsGroup(Group.General) },
                 { Group.Other, AddOptionsGroup(Group.Other) },
@@ -304,9 +310,9 @@ namespace NoProblems
                 var group = groupKV.Key;
                 var helper = groupKV.Value;
 
-                var buttonGroup = AddButtonPanel(helper, new RectOffset(0, 0, 5, 15), 10);
-                AddButton(buttonGroup, Localize.Settings_DisableEntireGrope, () => Switch(toggles, GetProblems(group), true), 250, 1f);
-                AddButton(buttonGroup, Localize.Settings_EnableEntireGrope, () => Switch(toggles, GetProblems(group), false), 250, 1f);
+                var buttonGroup = helper.AddButtonPanel(new RectOffset(0, 0, 5, 15), 10);
+                buttonGroup.AddButton(Localize.Settings_DisableEntireGrope, () => Switch(toggles, GetProblems(group), true), 250, 1f);
+                buttonGroup.AddButton(Localize.Settings_EnableEntireGrope, () => Switch(toggles, GetProblems(group), false), 250, 1f);
             }
 
             var notificationAtlas = TextureHelper.GetAtlas("Notifications");
@@ -319,7 +325,7 @@ namespace NoProblems
                 var saved = Data[problem];
 
                 var group = groups[GetGroup(problem)];
-                var toggle = AddToggle(group, string.Format(Localize.Setting_DisableProblem, text), saved);
+                var toggle = group.AddToggle(string.Format(Localize.Setting_DisableProblem, text), saved);
                 toggle.LabelItem.atlas = notificationAtlas;
                 toggle.LabelItem.processMarkup = true;
                 toggle.Control.OnStateChanged += (value) =>
@@ -331,7 +337,7 @@ namespace NoProblems
                 toggles[problem] = toggle;
             }
         }
-        private UIHelper AddOptionsGroup(Group group) => GeneralTab.AddOptionsGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
+        private CustomUIPanel AddOptionsGroup(Group group) => GeneralTab.AddOptionsGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
 
         private bool SwitchInProgress { get; set; } = false;
         private void OnDisabledChanged()
