@@ -106,7 +106,7 @@ namespace NoProblems
 		public static string Setting_HideAny => LocaleManager.GetString("Setting_HideAny", Culture);
 
 		/// <summary>
-		/// {0} —  this option just hides any notifications, but buildings behavior is keeped.
+		/// {0} —  this option just hides any notifications, but buildings behavior is kept.
 		/// </summary>
 		public static string Setting_HideDescription => LocaleManager.GetString("Setting_HideDescription", Culture);
 
