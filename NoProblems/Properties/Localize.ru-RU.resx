@@ -131,6 +131,9 @@
     <value>[UPDATED] Добавлена возможность удалять флаги проблем у здания, что влияет на поведение зданий. Может быть установлено в настройках мода.
 [TRANSLATION] Добавлен перевод на румынский.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
+    <value>[UPDATED] Новый стиль интерфейса настроек.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Уведомления аэропортов</value>
   </data>
