@@ -131,6 +131,9 @@
     <value>[UPDATED] Ajout de la possibilité de supprimer complètement les signaux de problèmes, ce qui affectera le comportement des bâtiments. Cette option peut être activée dans les paramètres du mod.
 [TRANSLATION] Ajout de la traduction roumaine.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
+    <value>[UPDATED] Nouveau style d'interface utilisateur pour les paramètres.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Notifications d'aéroport</value>
   </data>

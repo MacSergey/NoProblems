@@ -131,6 +131,9 @@
     <value>[UPDATED] Habilidad para eliminar notificaciones de problemas, esto afecta el comportamiento de los edificios. Se puede copnfigurar en los ajustes del mod.
 [TRANSLATION] Traducción al Romano.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
+    <value>[UPDATED] Nuevo estilo de interfaz de configuración.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Notificaciones de Aeropuerto</value>
   </data>

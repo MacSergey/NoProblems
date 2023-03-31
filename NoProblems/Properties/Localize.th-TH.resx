@@ -118,88 +118,88 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Mod_Description" xml:space="preserve">
-    <value>Wyłącz powiadomienia problemów</value>
+    <value>ปิดการแจ้งเตือนเกี่ยวกับปัญหาต่าง ๆ</value>
   </data>
   <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
-    <value>[UPDATED] Dodano wsparcie dla DLC Place &amp; Promenady.
-[UPDATED] Dodaj nowe powiadomienia z kilku ostatnich DLC.
-[NEW] Dodano możliwość ukrycia normalne powiadomienia, ale pokazywania główne powiadomień.
-[NEW] Dodano skrót do przełączania wyświetlania powiadomień.
-[UPDATED] Używanie Harmony zamiast starego systemu patchowania.</value>
+    <value>[UPDATED] เพิ่ม การรองรับ DLC Plazas &amp; Promenades
+[UPDATED] เพิ่ม การแจ้งเตือนใหม่ ๆ จาก DLC ล่าสุดหลายตัว
+[NEW] เพิ่ม ความสามารถในการซ่อนการแจ้งเตือนธรรมดา แล้วแสดงเฉพาะการแจ้งเตือนที่สำคัญ
+[NEW] เพิ่ม คำสั่งลัดสำหรับสลับสับเปลี่ยนรูปแบบการแจ้งเตือน
+[UPDATED] ใช้ Harmony แทนระบบแพตช์แบบเก่า</value>
   </data>
   <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
-    <value>[UPDATED] Dodano możliwość zupełnego usunięcia znaczników problemów, co wpłynie na zachowanie budynków. Może to zostać ustawione w ustawieniach modyfikacji.
-[TRANSLATION] Dodano tłumaczenie rumuńskie.</value>
+    <value>[UPDATED] เพิ่ม ความสามารถในการล้างสถานะของปัญหาต่าง ๆ ทั้งหมด ที่จะส่งผลต่อพฤติกรรมของอาคาร สามารถตั้งค่าได้ในการตั้งค่าของม็อด
+[TRANSLATION] แปลภาษาโรมาเนียเพิ่ม</value>
   </data>
   <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
-    <value>[UPDATED] Nowe ustawienia UI.</value>
+    <value>[UPDATED] UI หน้าการตั้งค่ารูปแบบใหม่</value>
   </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
-    <value>Powiadomienia lotnisk</value>
+    <value>การแจ้งเตือนท่าอากาศยาน</value>
   </data>
   <data name="Settings_CampusGroup" xml:space="preserve">
-    <value>Powiadomienia kampusów</value>
+    <value>การแจ้งเตือนวิทยาเขต</value>
   </data>
   <data name="Settings_DisableAll" xml:space="preserve">
-    <value>Wyłącz wszystkie</value>
+    <value>ปิดการใช้งานทั้งหมด</value>
   </data>
   <data name="Settings_DisableEntireGrope" xml:space="preserve">
-    <value>Wyłącz całą grupę</value>
+    <value>ปิดการใช้งานทั้งกลุ่ม</value>
   </data>
   <data name="Settings_DisastersGroup" xml:space="preserve">
-    <value>Powiadomienia o klęskach</value>
+    <value>การแจ้งเตือนภัยพิบัติ</value>
   </data>
   <data name="Settings_EnableAll" xml:space="preserve">
-    <value>Włącz wszystkie</value>
+    <value>เปิดใช้งานทั้งหมด</value>
   </data>
   <data name="Settings_EnableEntireGrope" xml:space="preserve">
-    <value>Włącz całą grupę</value>
+    <value>เปิดการใช้งานทั้งกลุ่ม</value>
   </data>
   <data name="Settings_FishingGroup" xml:space="preserve">
-    <value>Powiadomienia rybołówstwa</value>
+    <value>การแจ้งเตือนเกี่ยวกับการประมง</value>
   </data>
   <data name="Settings_GeneralGroup" xml:space="preserve">
-    <value>Powiadomienia ogólne</value>
+    <value>การแจ้งเตือนทั่วไป</value>
   </data>
   <data name="Settings_IndustryGroup" xml:space="preserve">
-    <value>Powiadomienia przemysłu</value>
+    <value>การแจ้งเตือนเกี่ยวกับอุตสาหกรรม</value>
   </data>
   <data name="Settings_NotConnectedGroup" xml:space="preserve">
-    <value>Powiadomienia o braku połączenia</value>
+    <value>การแจ้งเตื่อนเกี่ยวกับทางที่ไม่เชื่อมต่อ</value>
   </data>
   <data name="Settings_OtherGroup" xml:space="preserve">
-    <value>Pozostałe powiadomienia</value>
+    <value>การแจ้งเตือนอื่น ๆ</value>
   </data>
   <data name="Settings_ParksGroup" xml:space="preserve">
-    <value>Powiadomienie parków</value>
+    <value>การแจ้งเตือนเกี่ยวกับสวนสาธารณะ</value>
   </data>
   <data name="Settings_PedestrianGroup" xml:space="preserve">
-    <value>Powiadomienia terenów pieszych</value>
+    <value>การแจ้งเตือนเกี่ยวกับพื้นที่คนเดินเท้า</value>
   </data>
   <data name="Settings_СonsumptionGroup" xml:space="preserve">
-    <value>Powiadomienia o konsumpcji</value>
+    <value>การแจ้งเตือนเกี่ยวกับการอุปโภคบริโภค</value>
   </data>
   <data name="Setting_DisableProblem" xml:space="preserve">
-    <value>Wyłącz "{0}"</value>
+    <value>ปิดการใช้งาน "{0}"</value>
   </data>
   <data name="Setting_HideAny" xml:space="preserve">
-    <value>Ukryj dowolne</value>
+    <value>ซ่อนสถานะ</value>
   </data>
   <data name="Setting_HideDescription" xml:space="preserve">
-    <value>{0} — ta opcja po prostu ukryje wszystkie powiadomienia, ale zachowanie budynków jest niezmienione.
-{1} — ta sama opcja, ale tylko nie główne powiadomienia zostaną ukryte.
-{2} — ta opcja zmienia zachowanie budynków, zapobiega dodawaniu flag problemów do budynków.</value>
+    <value>{0} —  ตัวเลือกนี้แค่ซ่อนการแจ้งเตือน แต่ยังคงรักษาพฤติกรรมของอาคารไว้
+{1} —  ตัวเลือกนี้ก็เช่นกัน เฉพาะการแจ้งเตือนที่สำคัญเท่านั้นที่จะไม่ถูกซ่อน
+{2} —  ตัวเลือกนี้จะเปลี่ยนพฤติกรรมของอาคาร โดยจะป้องกันให้อาคารติดสถานะปัญหาต่าง ๆ</value>
   </data>
   <data name="Setting_HideNormal" xml:space="preserve">
-    <value>Ukryj normalne, ale pokaż główne</value>
+    <value>ซ่อนปัญหาธรรมดาแต่แสดงปัญหาอันที่สำคัญ</value>
   </data>
   <data name="Setting_HideType" xml:space="preserve">
-    <value>Ukryj opcję</value>
+    <value>ซ่อนตัวเลือก</value>
   </data>
   <data name="Setting_Remove" xml:space="preserve">
-    <value>Usuń znaczniki problemu</value>
+    <value>ลบสถานะปัญหาต่าง ๆ</value>
   </data>
   <data name="Setting_ToggleShortcut" xml:space="preserve">
-    <value>Przełącz widoczność</value>
+    <value>สลับการแสดง</value>
   </data>
 </root>

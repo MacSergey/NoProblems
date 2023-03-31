@@ -131,6 +131,9 @@
     <value>[UPDATED] Přidána možnost odstranit problémové příznaky úplně, což ovlivní chování budov. Může být nastaveno v nastavení módu.
 [TRANSLATION] Přidán Rumunský překlad.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
+    <value>[UPDATED] Nový styl nastavení uživatelského rozhraní.</value>
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Letištní oznámení</value>
   </data>
