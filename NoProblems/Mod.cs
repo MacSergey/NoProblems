@@ -9,7 +9,6 @@ using UnityEngine;
 using static Notification;
 using static ModsCommon.Settings.Helper;
 using static ColossalFramework.EnumExtensions;
-using ColossalFramework.UI;
 using ModsCommon.Utilities;
 using ModsCommon.UI;
 
@@ -26,8 +25,9 @@ namespace NoProblems
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
-            new ModVersion(new Version("2.0"), new DateTime(2022,9,24)),
-            new ModVersion(new Version("2.1"), new DateTime(2022,9,25)),
+            new ModVersion(new Version("2.0"), new DateTime(2022, 9, 24)),
+            new ModVersion(new Version("2.1"), new DateTime(2022, 9, 25)),
+            new ModVersion(new Version("2.1"), new DateTime(2023, 4, 1)),
         };
 
         protected override Version RequiredGameVersion => new Version(1, 16, 1, 2);
@@ -45,8 +45,8 @@ namespace NoProblems
             {
                 var infos = base.DependencyInfos;
 
-                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(917543381ul)));
-                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(2864220279ul)));
+                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(917543381ul), "Original No Problem Notifications"));
+                infos.Add(new ConflictDependencyInfo(DependencyState.Unsubscribe, new IdSearcher(2864220279ul), "No Problem Notifications fix"));
 
                 return infos;
             }
@@ -148,7 +148,7 @@ namespace NoProblems
     {
         public override void OnUpdate(float realTimeDelta, float simulationTimeDelta)
         {
-            if (!UIView.HasModalInput() && !UIView.HasInputFocus() && Settings.ToggleShortcut.IsPressed)
+            if (!ColossalFramework.UI.UIView.HasModalInput() && !ColossalFramework.UI.UIView.HasInputFocus() && Settings.ToggleShortcut.IsPressed)
             {
                 SingletonMod<Mod>.Logger.Debug($"On press shortcut");
                 Settings.HidingEnabled.value = !Settings.HidingEnabled.value;
@@ -271,38 +271,39 @@ namespace NoProblems
             AddLanguage(GeneralTab);
 
             var toggles = new Dictionary<ProblemStruct, ToggleSettingsItem>();
-            var generalGroup = GeneralTab.AddOptionsGroup(CommonLocalize.Settings_General);
+            var generalSection = GeneralTab.AddOptionsSection(CommonLocalize.Settings_General);
 
-            generalGroup.AddKeyMappingButton(ToggleShortcut);
+            generalSection.AddKeyMappingButton(ToggleShortcut);
 
-            generalGroup.AddTogglePanel(Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
+            var hideTypeGroup = generalSection.AddItemsGroup();
+            hideTypeGroup.AddTogglePanel(Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged);
 
             var color = new Color32(255, 215, 81, 255);
             var description = string.Format(Localize.Setting_HideDescription, Localize.Setting_HideAny.AddColor(color), Localize.Setting_HideNormal.AddColor(color), Localize.Setting_Remove.AddColor(color));
-            var descrItem = generalGroup.AddLabel(description, 0.8f);
-            descrItem.Borders = SettingsContentItem.Border.None;
+            var descrItem = hideTypeGroup.AddLabel(description, 0.8f);
+            descrItem.Borders = SettingsItemBorder.None;
             descrItem.LabelItem.processMarkup = true;
 
-            generalGroup.AddSpace(15f);
+            generalSection.AddSpace(15f);
 
-            var buttonPanel = generalGroup.AddButtonPanel(new RectOffset(0, 0, 5, 5), 10);
+            var buttonPanel = generalSection.AddButtonPanel(new RectOffset(0, 0, 5, 5), 10);
             buttonPanel.AddButton(Localize.Settings_DisableAll, () => Switch(toggles, ProblemStruct.All, true), 250, 1f);
             buttonPanel.AddButton(Localize.Settings_EnableAll, () => Switch(toggles, ProblemStruct.All, false), 250, 1f);
 
 
             var groups = new Dictionary<Group, CustomUIPanel>()
             {
-                { Group.General, AddOptionsGroup(Group.General) },
-                { Group.Other, AddOptionsGroup(Group.Other) },
-                { Group.Сonsumption, AddOptionsGroup(Group.Сonsumption) },
-                { Group.NotConnected, AddOptionsGroup(Group.NotConnected) },
-                { Group.Disasters, AddOptionsGroup(Group.Disasters) },
-                { Group.Parks, AddOptionsGroup(Group.Parks) },
-                { Group.Industry, AddOptionsGroup(Group.Industry) },
-                { Group.Campus, AddOptionsGroup(Group.Campus) },
-                { Group.Fishing, AddOptionsGroup(Group.Fishing) },
-                { Group.Airport, AddOptionsGroup(Group.Airport) },
-                { Group.Pedestrian, AddOptionsGroup(Group.Pedestrian) },
+                { Group.General, AddOptionsSection(Group.General) },
+                { Group.Other, AddOptionsSection(Group.Other) },
+                { Group.Сonsumption, AddOptionsSection(Group.Сonsumption) },
+                { Group.NotConnected, AddOptionsSection(Group.NotConnected) },
+                { Group.Disasters, AddOptionsSection(Group.Disasters) },
+                { Group.Parks, AddOptionsSection(Group.Parks) },
+                { Group.Industry, AddOptionsSection(Group.Industry) },
+                { Group.Campus, AddOptionsSection(Group.Campus) },
+                { Group.Fishing, AddOptionsSection(Group.Fishing) },
+                { Group.Airport, AddOptionsSection(Group.Airport) },
+                { Group.Pedestrian, AddOptionsSection(Group.Pedestrian) },
             };
 
             foreach (var groupKV in groups)
@@ -321,12 +322,12 @@ namespace NoProblems
             {
                 var title = GetTitle(problem);
                 var icon = GetIcon(problem);
-                var text = notificationAtlas.name != "Notifications" ? title : $"<sprite {icon}> {title}";
+                var text = notificationAtlas.name != "Notifications" ? title : $" <sprite {icon}>   {title}";
                 var saved = Data[problem];
 
                 var group = groups[GetGroup(problem)];
                 var toggle = group.AddToggle(string.Format(Localize.Setting_DisableProblem, text), saved);
-                toggle.LabelItem.atlas = notificationAtlas;
+                toggle.LabelItem.Atlas = notificationAtlas;
                 toggle.LabelItem.processMarkup = true;
                 toggle.Control.OnStateChanged += (value) =>
                 {
@@ -337,10 +338,10 @@ namespace NoProblems
                 toggles[problem] = toggle;
             }
         }
-        private CustomUIPanel AddOptionsGroup(Group group) => GeneralTab.AddOptionsGroup(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
+        private CustomUIPanel AddOptionsSection(Group group) => GeneralTab.AddOptionsSection(SingletonMod<Mod>.Instance.GetLocalizedString($"Settings_{group}Group"));
 
         private bool SwitchInProgress { get; set; } = false;
-        private void OnDisabledChanged()
+        private void OnDisabledChanged(int index = 0)
         {
             if (!SwitchInProgress && HideType == 2)
                 SingletonMod<Mod>.Instance.RemoveExistingProblems(~EnabledProblems);
