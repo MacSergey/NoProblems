@@ -30,7 +30,7 @@ namespace NoProblems
             new ModVersion(new Version("2.0"), new DateTime(2022, 9, 24)),
         };
 
-        protected override Version RequiredGameVersion => new Version(1, 17, 0, 3);
+        protected override Version RequiredGameVersion => new Version(1, 17, 1, 2);
 
 #if BETA
         public override bool IsBeta => true;
