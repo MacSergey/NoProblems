@@ -25,12 +25,12 @@ namespace NoProblems
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
-            new ModVersion(new Version("2.0"), new DateTime(2022, 9, 24)),
+            new ModVersion(new Version("2.2"), new DateTime(2023, 4, 1)),
             new ModVersion(new Version("2.1"), new DateTime(2022, 9, 25)),
-            new ModVersion(new Version("2.1"), new DateTime(2023, 4, 1)),
+            new ModVersion(new Version("2.0"), new DateTime(2022, 9, 24)),
         };
 
-        protected override Version RequiredGameVersion => new Version(1, 16, 1, 2);
+        protected override Version RequiredGameVersion => new Version(1, 17, 0, 3);
 
 #if BETA
         public override bool IsBeta => true;
