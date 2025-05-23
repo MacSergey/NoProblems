@@ -31,6 +31,11 @@ namespace NoProblems
 		public static string Mod_WhatsNewMessage2_3 => LocaleManager.GetString("Mod_WhatsNewMessage2_3", Culture);
 
 		/// <summary>
+		/// [UPDATED] Updated required game version to 1.18.1-f3
+		/// </summary>
+		public static string Mod_WhatsNewMessage2_4 => LocaleManager.GetString("Mod_WhatsNewMessage2_4", Culture);
+
+		/// <summary>
 		/// Airport notifications
 		/// </summary>
 		public static string Settings_AirportGroup => LocaleManager.GetString("Settings_AirportGroup", Culture);
