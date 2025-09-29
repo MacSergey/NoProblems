@@ -17,11 +17,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<AssemblyVersion>2.4</AssemblyVersion>
+		<AssemblyVersion>2.5</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
-		<AssemblyVersion>2.3</AssemblyVersion>
+		<AssemblyVersion>2.5</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stable Release|AnyCPU'">
