@@ -134,6 +134,9 @@
   <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
     <value>[UPDATED] Nouveau style d'interface utilisateur pour les paramètres.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_6" xml:space="preserve">
+    <value />
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Notifications d'aéroport</value>
   </data>

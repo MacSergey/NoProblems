@@ -131,6 +131,9 @@
     <value>[UPDATED] Adăugată opțiunea de a elimina crearea problemelor, afectând toate clădirile. Aceasta poate fi setată prin setările modului.
 [TRANSLATION] A fost adăugată limba română.</value>
   </data>
+  <data name="Mod_WhatsNewMessage2_6" xml:space="preserve">
+    <value />
+  </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Notificări aeroport</value>
   </data>
