@@ -25,7 +25,7 @@ namespace NoProblems
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
-            new ModVersion(new Version("2.6"), new DateTime(2026, 3, 8)),
+            new ModVersion(new Version("2.6"), new DateTime(2026, 3, 11)),
             new ModVersion(new Version("2.5"), new DateTime(2025, 9, 29)),
             new ModVersion(new Version("2.4"), new DateTime(2025, 5, 23)),
             new ModVersion(new Version("2.3"), new DateTime(2024, 10, 26)),
