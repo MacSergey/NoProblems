@@ -333,7 +333,7 @@ namespace NoProblems
                 var toggle = group.AddToggle(string.Format(Localize.Setting_DisableProblem, text), saved);
                 toggle.LabelItem.Atlas = notificationAtlas;
                 toggle.LabelItem.processMarkup = true;
-                toggle.Control.OnStateChanged += (value) =>
+                toggle.Control.OnValueChanged += (value) =>
                 {
                     Set(problem, saved);
                     OnDisabledChanged();
