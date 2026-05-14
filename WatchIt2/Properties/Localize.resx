@@ -118,33 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Mod_Description" xml:space="preserve">
-    <value>Disable problem notifications</value>
+    <value>Watch the status of the important capacities and disable problem notifications</value>
   </data>
   <data name="Mod_WhatsNewMessage2_0" xml:space="preserve">
-    <value>[UPDATED] Added Plaza &amp; Promenades DLC support.
-[UPDATED] Add new notifications from several last DLCs.
-[NEW] Added ability to hide normal notification, but show major notifications.
-[NEW] Added shortcut for toggling notifications visibility.
-[UPDATED] Using Harmony instead of old patching system.</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_1" xml:space="preserve">
-    <value>[UPDATED] Added the ability to remove problem flags at all, which will affect buildings behavior. Could be set in the mod settings.
-[TRANSLATION] Added Romanian translation.</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_2" xml:space="preserve">
-    <value>[UPDATED] New settings UI style.</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_3" xml:space="preserve">
-    <value>[UPDATED] Updated required game version to 1.18.1-f3</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_4" xml:space="preserve">
-    <value>[UPDATED] Updated required game version to 1.19.2-f3</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_5" xml:space="preserve">
-    <value>[UPDATED] Updated required game version to 1.20.1-f1</value>
-  </data>
-  <data name="Mod_WhatsNewMessage2_6" xml:space="preserve">
-    <value>[UPDATED] The mod is compatible with the game version 1.21.1-f5</value>
+    <value>[UPDATED] The mod is compatible with the game version 1.21.1-f9</value>
   </data>
   <data name="Settings_AirportGroup" xml:space="preserve">
     <value>Airport notifications</value>
@@ -153,7 +130,7 @@
     <value>Campus notifications</value>
   </data>
   <data name="Settings_DisableAll" xml:space="preserve">
-    <value>Disable all</value>
+    <value>Hide all problems</value>
   </data>
   <data name="Settings_DisableEntireGrope" xml:space="preserve">
     <value>Disable entire group</value>
@@ -162,7 +139,7 @@
     <value>Disasters notifications</value>
   </data>
   <data name="Settings_EnableAll" xml:space="preserve">
-    <value>Enable all</value>
+    <value>Show all problems</value>
   </data>
   <data name="Settings_EnableEntireGrope" xml:space="preserve">
     <value>Enable entire group</value>

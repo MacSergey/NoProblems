@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32819.101
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11723.231
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoProblems", "NoProblems\NoProblems.csproj", "{71040D68-EAE4-4710-A4BE-F98C9426CBB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchIt2", "WatchIt2\WatchIt2.csproj", "{71040D68-EAE4-4710-A4BE-F98C9426CBB5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{325C8695-A0A1-4EBD-897C-386BDFAA6940}"
 EndProject
@@ -56,25 +56,46 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Beta Debug|Any CPU = Beta Debug|Any CPU
+		Beta Debug|x64 = Beta Debug|x64
 		Beta Release|Any CPU = Beta Release|Any CPU
+		Beta Release|x64 = Beta Release|x64
 		Stable Debug|Any CPU = Stable Debug|Any CPU
+		Stable Debug|x64 = Stable Debug|x64
 		Stable Release|Any CPU = Stable Release|Any CPU
+		Stable Release|x64 = Stable Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.ActiveCfg = Beta Debug|Any CPU
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|Any CPU.Build.0 = Beta Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|x64.ActiveCfg = Beta Debug|x64
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Debug|x64.Build.0 = Beta Debug|x64
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.ActiveCfg = Beta Release|Any CPU
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|Any CPU.Build.0 = Beta Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|x64.ActiveCfg = Beta Release|x64
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Beta Release|x64.Build.0 = Beta Release|x64
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.ActiveCfg = Stable Debug|Any CPU
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|Any CPU.Build.0 = Stable Debug|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|x64.ActiveCfg = Stable Debug|x64
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Debug|x64.Build.0 = Stable Debug|x64
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.ActiveCfg = Stable Release|Any CPU
 		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|Any CPU.Build.0 = Stable Release|Any CPU
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|x64.ActiveCfg = Stable Release|x64
+		{71040D68-EAE4-4710-A4BE-F98C9426CBB5}.Stable Release|x64.Build.0 = Stable Release|x64
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|Any CPU.Build.0 = Debug|Any CPU
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|x64.ActiveCfg = Debug|x64
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Debug|x64.Build.0 = Debug|x64
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|Any CPU.Build.0 = Debug|Any CPU
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|x64.ActiveCfg = Debug|x64
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Beta Release|x64.Build.0 = Debug|x64
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Debug|x64.ActiveCfg = Debug|x64
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Debug|x64.Build.0 = Debug|x64
 		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|Any CPU.Build.0 = Debug|Any CPU
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|x64.ActiveCfg = Debug|x64
+		{965F863B-1394-41ED-85EC-B35DC09003EB}.Stable Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

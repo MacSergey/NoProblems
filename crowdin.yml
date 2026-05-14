@@ -1,3 +1,3 @@
 files:
-  - source: /NoProblems/Properties/Localize.resx
-    translation: /NoProblems/Properties/Localize.%locale%.resx
+  - source: /WatchIt2/Properties/Localize.resx
+    translation: /WatchIt2/Properties/Localize.%locale%.resx

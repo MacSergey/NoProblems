@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFramework>net35</TargetFramework>
-		<Authors>MacSergey</Authors>
-		<Product>No Problems</Product>
+		<Authors>Nickayz</Authors>
+		<Product>WatchIt2</Product>
 		<PackageProjectUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=</PackageProjectUrl>
 		<LangVersion>9.0</LangVersion>
 		<ManagedDLLPath>$(MSBuildProgramFiles32)/Steam/steamapps/common/Cities_Skylines/Cities_Data/Managed</ManagedDLLPath>
@@ -14,14 +14,15 @@
 			$(ExternalDLLPath)
 		</AssemblySearchPaths>
 		<Configurations>Beta Debug;Beta Release;Stable Debug;Stable Release</Configurations>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<AssemblyVersion>2.6</AssemblyVersion>
+		<AssemblyVersion>2.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
-		<AssemblyVersion>2.6</AssemblyVersion>
+		<AssemblyVersion>2.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stable Release|AnyCPU'">
@@ -29,6 +30,13 @@
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
 		<DefineConstants />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Stable Release|x64'">
+	  <OutputPath>bin\$(Configuration)\</OutputPath>
+	  <Optimize>true</Optimize>
+	  <DebugType>pdbonly</DebugType>
+	  <DefineConstants />
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stable Debug|AnyCPU'">
@@ -39,11 +47,26 @@
 		<DefineConstants>DEBUG</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Stable Debug|x64'">
+	  <OutputPath>bin\$(Configuration)\</OutputPath>
+	  <Optimize>false</Optimize>
+	  <DebugType>full</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
+	  <DefineConstants>DEBUG</DefineConstants>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta Release|AnyCPU'">
 		<OutputPath>bin\$(Configuration)\</OutputPath>
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
 		<DefineConstants>BETA</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Beta Release|x64'">
+	  <OutputPath>bin\$(Configuration)\</OutputPath>
+	  <Optimize>true</Optimize>
+	  <DebugType>pdbonly</DebugType>
+	  <DefineConstants>BETA</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta Debug|AnyCPU'">
@@ -52,6 +75,14 @@
 		<DebugType>full</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<DefineConstants>BETA, DEBUG</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Beta Debug|x64'">
+	  <OutputPath>bin\$(Configuration)\</OutputPath>
+	  <Optimize>false</Optimize>
+	  <DebugType>full</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
+	  <DefineConstants>BETA, DEBUG</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -73,10 +104,12 @@
 
 	<ItemGroup>
 	  <None Remove="PreviewImage.png" />
+	  <None Remove="Icons\*.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="PreviewImage.png" />
+	  <EmbeddedResource Include="Icons\*.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -101,7 +134,7 @@
 	  <None Include="Properties\Localize.resx">
 	    <Generator>LocalizeGenerator</Generator>
 	    <LastGenOutput>Localize.cs</LastGenOutput>
-	    <CustomToolNamespace>NoProblems</CustomToolNamespace>
+	    <CustomToolNamespace>WatchIt2</CustomToolNamespace>
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Include="Properties\Localize.ro-RO.resx">
@@ -116,16 +149,19 @@
 	<ItemGroup>
 		<PackageReference Include="CitiesHarmony.API" Version="2.0.0" />
 		<Reference Include="Assembly-CSharp">
-			<Private>false</Private>
+			<HintPath>E:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="ColossalManaged">
-			<Private>false</Private>
-		</Reference>
+			<HintPath>E:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\ColossalManaged.dll</HintPath>
+		</Reference>		
 		<Reference Include="ICities">
-			<Private>false</Private>
+			<HintPath>E:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\ICities.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine">
-			<Private>false</Private>
+			<HintPath>E:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>E:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.UI.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Xml.Linq">
 			<Private>true</Private>
@@ -166,12 +202,12 @@
 
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Stable Release' OR '$(Configuration)' == 'Stable Debug'">
-		<WorkshopId>2866992009</WorkshopId>
+		<WorkshopId>3725814542</WorkshopId>
 		<Type>Stable</Type>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Beta Release' OR '$(Configuration)' == 'Beta Debug'">
-		<!--<WorkshopId>2864219075</WorkshopId>-->
+		<!--<WorkshopId>0</WorkshopId>-->
 		<Type>Beta</Type>
 	</PropertyGroup>
 
