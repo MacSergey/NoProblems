@@ -1,41 +1,22 @@
 [img]https://i.imgur.com/1EqyarL.png[/img]
-[HR][/HR]
-[code][h1]Overview[/h1]
-[list][h2]This mod allow to disable showing of problem notifications. It only hides notifications, but does not resolve problems[/h2][/list]
-[/code]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2881031511][img]https://imgur.com/mzpNwS8.png[/img][/url]
 
-it is updated version of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=917543381]TPB's mod[/url].
+This mod shows city vitals like water, electricity and indicates the supply state by colors and shows percentages.
+It also contains an advanced warning system for problems with buildings and networks. No more need for browsing all over the map to find problems - all problems appear as warnings and an included problem panel shows all buildings and networks with current problems. The problem panel has an inbuild problem localizer and will take you to the culprit. 
 
-[h1]How to use[/h1]
-You can set which types of notifications you want to hide in the mod settings.
-You can toggle visibility of notifications by shortcut Ctrl+Shift+N from game (can be rebinded in the mod settings).
-You can hide only normal notifications, but still have visible major notifications.
+You can use the toggles in the main menu to turn on/off the problems shown in the warning panel and simultaneously above buildings. But keep in mind - the actual problems remain! 
 
-[h1]Main difference from original version[/h1]
-[list]
-[*]Using Harmony instead of old patching system.
-[*]Added new notifications from several last DLCs.
-[*]New options
-[*]Localizations
-[/list]
+Furthermore, you can use it to display the city limits and statistics.
 
-[HR][/HR]
-[h1]Support[/h1]
-If you have any problems with mod or errors occur, you should describe your problem as much detailed as possible, comments like “mod does not work” will be ignored.
-Also, you should provide the game log, comments about errors without game log will be ignored too. Read [url=https://steamcommunity.com/sharedfiles/filedetails/?id=463645931]here[/url] how to share log. 
+The information panel has a popup menu for the most important functions. 
 
-Although, the best way to solve problems is joining to my discord and write to [b]#Support[/b] channel, unfortunately, steam comments is very useless for conversation. 
+All panels are draggable and redesigned.
 
-[url=https://discord.gg/NnwhuBKMqj][h3]Join discord server[/h3]
-[img]https://i.imgur.com/bnDNN2x.png[/img][/url]
+I recommend subscribing to this mod collection with compatible mods as of May 2026: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3725724718]Basic Mods 2026 - Collection & Guide[/url].
 
-[HR][/HR]
-[h1]Source code[/h1]
-[url=https://github.com/MacSergey/WatchIt2][h3]Get from GitHub[/h3][img]https://i.imgur.com/DczUXYq.png[/img][/url]
+If you need to get rid of Chirper at the top use one of the following: 
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=405791507]Chirpy Exterminator[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1591417160]Hide It![/url] or [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2723628116]Control It![/url]
 
-[HR][/HR]
-[h1]Translations[/h1]
-If you want to help improve existing translations or you want to translate into your own language (ask to add it to the translation project).
-[url=https://crowdin.com/project/macsergey-other-mods][img]https://i.imgur.com/uG2NKvG.png[/img][/url]
+Thank you to Keallu for the original idea and MacSergey for the NoProblems mod on which I based the new problem filtering upon.
 
-[HR][/HR][i]For full transparency: I am an employee at Colossal Order, however this is my personal account and as such all opinions, content and contributions to the community reflect my own views and interests, and are not created nor maintained as part of my job. Like all user generated content, this is not officially supported content and should be used at your own risk.[/i]
+The source code is available [url=https://github.com/Nickayz/WatchIt2]here[/url].

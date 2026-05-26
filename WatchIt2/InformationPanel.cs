@@ -15,7 +15,6 @@ namespace WatchIt2
         private const float TileSize = 40f;
         private const float IconSize = 32f;
         private const float IndicatorSize = 40f;
-        private const int VerticalRows = 13;
         private const float DragBackgroundOffset = 6f;
         private const float EdgeOffset = 16f;
         private const float RefreshInterval = 5f;
@@ -33,6 +32,14 @@ namespace WatchIt2
         private const float SettingsMenuRowHeight = 30f;
         private const float SettingsMenuSliderRowHeight = 44f;
         private const float SettingsMenuSpace = 6f;
+        private const int DoubleRibbonCount = 2;
+        private const int VitalsSelectionColumns = 7;
+        private const int VitalsSelectionRows = 4;
+        private const float VitalsSelectionTitleHeight = 20f;
+        private const float VitalsSelectionButtonSize = 30f;
+        private const float VitalsSelectionIconSize = 24f;
+        private const float VitalsSelectionButtonSpace = 5f;
+        private const float VitalsSelectionHeight = VitalsSelectionTitleHeight + VitalsSelectionRows * VitalsSelectionButtonSize + (VitalsSelectionRows - 1) * VitalsSelectionButtonSpace;
 
         private static InformationPanel Instance { get; set; }
         private static UITextureAtlas IndicatorAtlas { get; set; }
@@ -47,6 +54,7 @@ namespace WatchIt2
         private bool IsPanelDragActive { get; set; }
         private bool PanelDragMoved { get; set; }
         private Vector3 LastPanelDragPosition { get; set; }
+        private bool IsPanelPositionLoaded { get; set; }
         private float LastRefreshTime { get; set; }
 
         public static void Create()
@@ -70,6 +78,7 @@ namespace WatchIt2
 
             if (Instance != null)
             {
+                Instance.CheckPosition();
                 UnityEngine.Object.Destroy(Instance.gameObject);
                 Instance = null;
             }
@@ -88,6 +97,12 @@ namespace WatchIt2
         {
             Instance?.ApplyDragBackgroundOpacity();
         }
+        public static void RefreshGaugeOpacity()
+        {
+            Instance?.ApplyGaugeOpacity();
+            ProblemPanel.RefreshGaugeOpacity();
+
+        }
         public static void RestoreDefaultPosition()
         {
             if (Instance == null)
@@ -96,8 +111,14 @@ namespace WatchIt2
             Instance.ProblemsPanel?.RefreshNow();
             Instance.ApplyLayout();
             Instance.SetDefaultPosition();
+            Instance.IsPanelPositionLoaded = true;
             Instance.CheckPosition();
             PopupMenu?.SetPosition(Instance.SettingsToggle);
+        }
+        internal static void RestoreDefaultVitalVisibility()
+        {
+            foreach (var info in Infos)
+                Settings.SetVitalVisible(info.Name, true);
         }
         internal static ProblemPanel CurrentProblemPanel
         {
@@ -188,11 +209,12 @@ namespace WatchIt2
 
             ApplyLayout();
             ApplyDragBackgroundOpacity();
+            ApplyGaugeOpacity();
         }
         public override void Start()
         {
             base.Start();
-            SetDefaultPosition();
+            SetSavedPosition();
         }
         public override void Update()
         {
@@ -217,6 +239,24 @@ namespace WatchIt2
             var y = Mathf.Min(EdgeOffset, Mathf.Max(0f, resolution.y - height));
             relativePosition = new Vector3(x, y);
         }
+        private void SetSavedPosition()
+        {
+            var x = Settings.InformationPanelPositionX.value;
+            var y = Settings.InformationPanelPositionY.value;
+
+            if (x >= 0f && y >= 0f)
+                relativePosition = new Vector3(x, y);
+            else
+                SetDefaultPosition();
+
+            IsPanelPositionLoaded = true;
+            CheckPosition();
+        }
+        private void SavePosition()
+        {
+            Settings.InformationPanelPositionX.value = relativePosition.x;
+            Settings.InformationPanelPositionY.value = relativePosition.y;
+        }
         private void CheckPosition()
         {
             var view = UIView.GetAView();
@@ -226,6 +266,9 @@ namespace WatchIt2
             position.x = Mathf.Clamp(position.x, 0f, Mathf.Max(0f, resolution.x - width));
             position.y = Mathf.Clamp(position.y, 0f, Mathf.Max(0f, resolution.y - height));
             relativePosition = position;
+
+            if (IsPanelPositionLoaded)
+                SavePosition();
         }
         private void ApplyLayout()
         {
@@ -236,37 +279,80 @@ namespace WatchIt2
         }
         private void ApplyHorizontalLayout()
         {
-            var panelWidth = TileSize * (Infos.Length + 1) + DragBackgroundOffset * 2f;
+            var visibleCount = GetVisibleItemCount();
+            var rowCount = Settings.InformationPanelDoubleRibbonLayout ? Mathf.Min(DoubleRibbonCount, Mathf.Max(visibleCount, 1)) : 1;
+            var columnCount = Settings.InformationPanelDoubleRibbonLayout ? Mathf.CeilToInt(visibleCount / (float)rowCount) : visibleCount;
+            var panelWidth = Mathf.Max(TileSize * 2f + DragBackgroundOffset * 2f, TileSize * (columnCount + 1) + DragBackgroundOffset * 2f);
             var problemHeight = ProblemsPanel?.GetLayoutHeight(false, panelWidth) ?? 0f;
-            size = new Vector2(panelWidth, TileSize + problemHeight + DragBackgroundOffset * 2f);
+            size = new Vector2(panelWidth, TileSize * rowCount + problemHeight + DragBackgroundOffset * 2f);
             SetDragBackgroundSize();
 
             if (SettingsToggle != null)
                 SettingsToggle.relativePosition = new Vector3(DragBackgroundOffset, DragBackgroundOffset);
 
+            var visibleIndex = 0;
             for (var i = 0; i < Items.Count; i += 1)
-                Items[i].relativePosition = new Vector3(DragBackgroundOffset + TileSize * (i + 1), DragBackgroundOffset);
+            {
+                var item = Items[i];
+                var visible = IsInfoVisible(item.Info);
+                item.isVisible = visible;
 
-            ProblemsPanel?.ApplyLayout(false, panelWidth, DragBackgroundOffset + TileSize);
+                if (!visible)
+                    continue;
+
+                var column = Settings.InformationPanelDoubleRibbonLayout ? visibleIndex % columnCount : visibleIndex;
+                var row = Settings.InformationPanelDoubleRibbonLayout ? visibleIndex / columnCount : 0;
+                item.relativePosition = new Vector3(DragBackgroundOffset + TileSize * (column + 1), DragBackgroundOffset + TileSize * row);
+                visibleIndex += 1;
+            }
+
+            ProblemsPanel?.ApplyLayout(false, panelWidth, DragBackgroundOffset + TileSize * rowCount);
         }
         private void ApplyVerticalLayout()
         {
-            var panelWidth = TileSize * 2f + DragBackgroundOffset * 2f;
+            var visibleCount = GetVisibleItemCount();
+            var visibleRows = Settings.InformationPanelDoubleRibbonLayout ? Mathf.CeilToInt(visibleCount / 2f) : visibleCount;
+            var panelWidth = TileSize * (Settings.InformationPanelDoubleRibbonLayout ? 2f : 1f) + DragBackgroundOffset * 2f;
             var problemHeight = ProblemsPanel?.GetLayoutHeight(true, panelWidth) ?? 0f;
-            size = new Vector2(panelWidth, TileSize * (VerticalRows + 1) + problemHeight + DragBackgroundOffset * 2f);
+            size = new Vector2(panelWidth, TileSize * (visibleRows + 1) + problemHeight + DragBackgroundOffset * 2f);
             SetDragBackgroundSize();
 
             if (SettingsToggle != null)
                 SettingsToggle.relativePosition = new Vector3((width - TileSize) * 0.5f, DragBackgroundOffset);
 
+            var visibleIndex = 0;
             for (var i = 0; i < Items.Count; i += 1)
             {
-                var column = i / VerticalRows;
-                var row = i % VerticalRows;
-                Items[i].relativePosition = new Vector3(DragBackgroundOffset + TileSize * column, DragBackgroundOffset + TileSize * (row + 1));
+                var item = Items[i];
+                var visible = IsInfoVisible(item.Info);
+                item.isVisible = visible;
+
+                if (!visible || visibleRows <= 0)
+                    continue;
+
+                var column = Settings.InformationPanelDoubleRibbonLayout ? visibleIndex / visibleRows : 0;
+                var row = Settings.InformationPanelDoubleRibbonLayout ? visibleIndex % visibleRows : visibleIndex;
+                var x = DragBackgroundOffset + TileSize * column;
+                item.relativePosition = new Vector3(x, DragBackgroundOffset + TileSize * (row + 1));
+                visibleIndex += 1;
             }
 
-            ProblemsPanel?.ApplyLayout(true, panelWidth, DragBackgroundOffset + TileSize * (VerticalRows + 1));
+            ProblemsPanel?.ApplyLayout(true, panelWidth, DragBackgroundOffset + TileSize * (visibleRows + 1));
+        }
+        private int GetVisibleItemCount()
+        {
+            var count = 0;
+            for (var i = 0; i < Items.Count; i += 1)
+            {
+                if (IsInfoVisible(Items[i].Info))
+                    count += 1;
+            }
+
+            return count;
+        }
+        private static bool IsInfoVisible(InformationInfo info)
+        {
+            return info != null && Settings.IsVitalVisible(info.Name);
         }
         private void SetDragBackgroundSize()
         {
@@ -292,6 +378,11 @@ namespace WatchIt2
             var color = new Color32(48, 52, 54, alpha);
 
             DragBackgroundVisual.BgColors = new ColorSet(color);
+        }
+        private void ApplyGaugeOpacity()
+        {
+            for (var i = 0; i < Items.Count; i += 1)
+                Items[i].ApplyGaugeOpacity();
         }
         private void BeginPanelDrag(UIMouseEventParameter eventParam)
         {
@@ -380,6 +471,14 @@ namespace WatchIt2
 
                 foreach (var item in Items)
                 {
+                    if (!IsInfoVisible(item.Info))
+                    {
+                        item.isVisible = false;
+                        item.SetSelected(false);
+                        continue;
+                    }
+
+                    item.isVisible = true;
                     item.RefreshValue();
                     item.SetSelected(infoManager != null && item.Info.Matches(infoManager.CurrentMode, infoManager.CurrentSubMode));
                 }
@@ -786,31 +885,69 @@ namespace WatchIt2
             else
                 infoManager.SetCurrentMode(info.InfoMode, info.SubInfoMode);
         }
+        private static IconInfo ResolveIcon(InformationInfo info, params string[] iconCandidates)
+        {
+            var candidates = iconCandidates != null && iconCandidates.Length > 0 ? iconCandidates : info.IconCandidates;
+            var indicatorAtlas = GetIndicatorAtlas();
+            if (indicatorAtlas != null)
+            {
+                foreach (var candidate in candidates)
+                {
+                    if (!string.IsNullOrEmpty(candidate) && indicatorAtlas[candidate] != null)
+                        return new IconInfo(indicatorAtlas, candidate, false);
+                }
+            }
+
+            var atlases = Resources.FindObjectsOfTypeAll(typeof(UITextureAtlas)) as UITextureAtlas[];
+            if (atlases != null)
+            {
+                foreach (var candidate in candidates)
+                {
+                    if (string.IsNullOrEmpty(candidate))
+                        continue;
+
+                    foreach (var atlas in atlases)
+                    {
+                        if (atlas != null && atlas[candidate] != null)
+                            return new IconInfo(atlas, candidate, false);
+                    }
+                }
+            }
+
+            return new IconInfo(CommonTextures.Atlas, string.Empty, true);
+        }
+        private static IconInfo ResolveVitalsSelectionIcon(InformationInfo info)
+        {
+            if (info != null && info.Name == "Happiness")
+                return ResolveIcon(info, "InfoPanelIconHappiness", "InfoIconHappiness", "HappinessIcon", "ToolbarIconBeautification");
+
+            return ResolveIcon(info);
+        }
 
         private static readonly InformationInfo[] Infos =
         {
             new InformationInfo("Electricity", "Electricity", true, InfoManager.InfoMode.Electricity, InfoManager.SubInfoMode.Default, "E", "ToolbarIconElectricity", "InfoIconElectricity", "ElectricityIcon", "ElectricityNormal"),
             new InformationInfo("Water", "Water", true, InfoManager.InfoMode.Water, InfoManager.SubInfoMode.Default, "W", "ToolbarIconWaterAndSewage", "InfoIconWater", "InfoIconWater2", "WaterIcon", "WaterNormal"),
-            new InformationInfo("Sewage", "Sewage", true, InfoManager.InfoMode.Water, InfoManager.SubInfoMode.Default, "S", "SubBarWaterServices", "InfoIconWater2", "SewageIcon", "SewageNormal"),
-            new InformationInfo("Garbage", "Garbage", true, InfoManager.InfoMode.Garbage, InfoManager.SubInfoMode.Default, "G", "ToolbarIconGarbage", "InfoIconGarbage", "GarbageIcon", "GarbageNormal"),
+            new InformationInfo("Sewage", "Sewage", true, InfoManager.InfoMode.Water, InfoManager.SubInfoMode.Default, "S", "Sewage", "SubBarWaterServices", "InfoIconWater2", "SewageIcon", "SewageNormal"),
+            new InformationInfo("Garbage", "Garbage", true, InfoManager.InfoMode.Garbage, InfoManager.SubInfoMode.Default, "G", "Garbage", "ToolbarIconGarbage", "InfoIconGarbage", "GarbageIcon", "GarbageNormal"),
             new InformationInfo("ElementarySchool", "Elementary school", true, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.ElementarySchool, "ES", "SubBarEducationElementarySchool", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
             new InformationInfo("HighSchool", "High school", true, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.HighSchool, "HS", "SubBarEducationHighSchool", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
-            new InformationInfo("University", "University", true, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.University, "U", "SubBarEducationUniversity", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
+            new InformationInfo("University", "University", true, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.University, "U", "University", "SubBarEducationUniversity", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
             new InformationInfo("Healthcare", "Healthcare", true, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.HealthCare, "HC", "ToolbarIconHealthcare", "InfoIconHealth", "HealthIcon", "HealthcareIcon"),
-            new InformationInfo("Crematorium", "Crematorium", true, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.DeathCare, "Cr", "SubBarHealthcareDeathcare", "DeathCareIcon", "CrematoriumIcon", "ToolbarIconHealthcare"),
+            new InformationInfo("Crematorium", "Crematorium", true, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.DeathCare, "Cr", "Crematorium", "SubBarHealthcareDeathcare", "DeathCareIcon", "CrematoriumIcon", "ToolbarIconHealthcare"),
             new InformationInfo("FireDepartment", "Fire department", true, InfoManager.InfoMode.FireSafety, InfoManager.SubInfoMode.Default, "FD", "ToolbarIconFireDepartment", "InfoIconFireSafety", "FireSafetyIcon", "FireDepartmentIcon", "FireNormal"),
             new InformationInfo("PoliceDepartment", "Police department", true, InfoManager.InfoMode.CrimeRate, InfoManager.SubInfoMode.Default, "P", "ToolbarIconPolice", "InfoIconCrimeRate", "PoliceIcon", "CrimeNormal"),
-            new InformationInfo("Jail", "Jail", true, InfoManager.InfoMode.CrimeRate, InfoManager.SubInfoMode.Prisons, "J", "SubBarPolicePrison", "PrisonIcon", "JailIcon", "ToolbarIconPolice"),
+            new InformationInfo("Jail", "Jail", true, InfoManager.InfoMode.CrimeRate, InfoManager.SubInfoMode.Prisons, "J", "Jail", "SubBarPolicePrison", "PrisonIcon", "JailIcon", "ToolbarIconPolice"),
             new InformationInfo("Heating", "Heating", true, InfoManager.InfoMode.Heating, InfoManager.SubInfoMode.Default, "H", "SubBarWaterHeatingGroup", "InfoIconHeating", "HeatingIcon", "ToolbarIconWaterAndSewage", "HeatingNormal"),
             new InformationInfo("Landfill", "Landfill", false, InfoManager.InfoMode.Garbage, InfoManager.SubInfoMode.Default, "Lf", "LandfillIcon", "ToolbarIconGarbage", "GarbageIcon", "GarbageNormal"),
-            new InformationInfo("Library", "Library", false, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.LibraryEducation, "Li", "LibraryIcon", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
-            new InformationInfo("Cemetery", "Cemetery", false, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.DeathCare, "Ce", "CemeteryIcon", "DeathCareIcon", "ToolbarIconHealthcare"),
+            new InformationInfo("Library", "Library", false, InfoManager.InfoMode.Education, InfoManager.SubInfoMode.LibraryEducation, "Li", "Library", "LibraryIcon", "InfoIconEducation", "ToolbarIconEducation", "EducationIcon"),
+            new InformationInfo("Cemetery", "Cemetery", false, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.DeathCare, "Ce", "Cemetery", "CemeteryIcon", "DeathCareIcon", "ToolbarIconHealthcare"),
             new InformationInfo("Traffic", "Traffic", true, InfoManager.InfoMode.Traffic, InfoManager.SubInfoMode.Default, "T", "InfoIconTrafficCongestion", "InfoIconTraffic", "TrafficIcon", "ToolbarIconRoads"),
-            new InformationInfo("GroundPollution", "Ground pollution", false, InfoManager.InfoMode.Pollution, InfoManager.SubInfoMode.Default, "GP", "InfoIconPollution", "PollutionIcon", "PollutionNormal"),
-            new InformationInfo("DrinkingWaterPollution", "Drinking water pollution", false, InfoManager.InfoMode.Pollution, InfoManager.SubInfoMode.Default, "WP", "InfoIconWater", "InfoIconWater2", "WaterPollutionIcon", "DirtyWaterNormal"),
+            new InformationInfo("GroundPollution", "Ground pollution", false, InfoManager.InfoMode.Pollution, InfoManager.SubInfoMode.Default, "GP", "GroundPollution", "InfoIconPollution", "PollutionIcon", "PollutionNormal"),
+            new InformationInfo("DrinkingWaterPollution", "Drinking water pollution", false, InfoManager.InfoMode.Pollution, InfoManager.SubInfoMode.Default, "WP", "DrinkingWaterPollution", "InfoIconWater", "InfoIconWater2", "WaterPollutionIcon", "DirtyWaterNormal"),
             new InformationInfo("NoisePollution", "Noise pollution", false, InfoManager.InfoMode.NoisePollution, InfoManager.SubInfoMode.Default, "N", "InfoIconNoisePollution", "NoisePollutionIcon", "NoiseNormal"),
-            new InformationInfo("Fire", "Fire", false, InfoManager.InfoMode.FireSafety, InfoManager.SubInfoMode.Default, "F", "InfoIconFireSafety", "FireSafetyIcon", "FireIcon", "FireNormal"),
-            new InformationInfo("Crime", "Crime", false, InfoManager.InfoMode.CrimeRate, InfoManager.SubInfoMode.Default, "C", "InfoIconCrimeRate", "CrimeIcon", "ToolbarIconPolice", "CrimeNormal"),
+            new InformationInfo("Fire", "Fire", false, InfoManager.InfoMode.FireSafety, InfoManager.SubInfoMode.Default, "F", "Fire", "InfoIconFireSafety", "FireSafetyIcon", "FireIcon", "FireNormal"),
+            new InformationInfo("Crime", "Crime", false, InfoManager.InfoMode.CrimeRate, InfoManager.SubInfoMode.Default, "C", "Crime", "InfoIconCrimeRate", "CrimeIcon", "ToolbarIconPolice", "CrimeNormal"),
             new InformationInfo("Unemployment", "Unemployment", false, InfoManager.InfoMode.Density, InfoManager.SubInfoMode.Default, "Un", "InfoIconEmployment", "EmploymentIcon", "InfoIconDensity", "ToolbarIconZoning"),
             new InformationInfo("Health", "Health", true, InfoManager.InfoMode.Health, InfoManager.SubInfoMode.HealthCare, "He", "InfoIconHealth", "HealthIcon", "ToolbarIconHealthcare"),
             new InformationInfo("CityAttractiveness", "City attractiveness", true, InfoManager.InfoMode.Tourism, InfoManager.SubInfoMode.Attractiveness, "A", "InfoIconTourism", "TourismIcon", "AttractivenessIcon", "ToolbarIconBeautification"),
@@ -833,6 +970,17 @@ namespace WatchIt2
             NotificationIconHappiness80,
             NotificationIconHappiness100,
             SettingsIconSprite,
+            "Cemetery",
+            "Crematorium",
+            "Crime",
+            "DrinkingWaterPollution",
+            "Fire",
+            "Garbage",
+            "GroundPollution",
+            "Jail",
+            "Library",
+            "Sewage",
+            "University",
             "YellowIndicator",
             "YellowIndicator2",
             "YellowRedIndicator",
@@ -975,11 +1123,35 @@ namespace WatchIt2
                 GaugeFill.color = GetGaugeColor(Info, percentage);
                 SetHappinessIcon(percentage);
                 SetIndicator(percentage);
+                ApplyGaugeOpacity();
                 tooltip = string.Format("{0}: {1}%", Info.Title, percentage);
             }
             public void SetSelected(bool selected)
             {
                 IsSelected = selected;
+            }
+            public void ApplyGaugeOpacity()
+            {
+                var opacity = Mathf.Clamp(Settings.InformationPanelGaugeOpacity.value, 0, 100);
+                var alpha = (byte)Mathf.RoundToInt(opacity * 255f / 100f);
+                var trackAlpha = (byte)Mathf.RoundToInt(opacity * 128f / 100f);
+                var color = new Color32(255, 255, 255, alpha);
+
+                AllIconColors = color;
+                AllTextColors = color;
+                dropShadowColor = new Color32(0, 0, 0, (byte)Mathf.RoundToInt(opacity * 192f / 100f));
+
+                if (Indicator != null)
+                    Indicator.color = color;
+
+                if (GaugeTrack != null)
+                    GaugeTrack.color = new Color32(0, 0, 0, trackAlpha);
+
+                if (GaugeFill != null)
+                {
+                    var gaugeColor = (Color32)GaugeFill.color;
+                    GaugeFill.color = new Color32(gaugeColor.r, gaugeColor.g, gaugeColor.b, alpha);
+                }
             }
             protected override void OnSizeChanged()
             {
@@ -1068,26 +1240,6 @@ namespace WatchIt2
             private void OnItemMouseUp(UIComponent component, UIMouseEventParameter eventParam)
             {
                 (parent as InformationPanel)?.EndPanelDrag(eventParam);
-            }
-            private static IconInfo ResolveIcon(InformationInfo info)
-            {
-                var atlases = Resources.FindObjectsOfTypeAll(typeof(UITextureAtlas)) as UITextureAtlas[];
-                if (atlases != null)
-                {
-                    foreach (var candidate in info.IconCandidates)
-                    {
-                        if (string.IsNullOrEmpty(candidate))
-                            continue;
-
-                        foreach (var atlas in atlases)
-                        {
-                            if (atlas != null && atlas[candidate] != null)
-                                return new IconInfo(atlas, candidate, false);
-                        }
-                    }
-                }
-
-                return new IconInfo(CommonTextures.Atlas, string.Empty, true);
             }
         }
 
@@ -1189,9 +1341,13 @@ namespace WatchIt2
         private class SettingsMenu : CustomUIPanel
         {
             private CustomUIButton LayoutButton { get; set; }
+            private CustomUIButton DoubleRibbonButton { get; set; }
             private CustomUIButton AllProblemsButton { get; set; }
             private CustomUISlider TransparencySlider { get; set; }
             private CustomUILabel TransparencyValue { get; set; }
+            private CustomUISlider GaugeOpacitySlider { get; set; }
+            private CustomUILabel GaugeOpacityValue { get; set; }
+            private VitalsSelectionPanel VitalsSelection { get; set; }
             private UIComponent Source { get; set; }
             private bool IsSyncingControls { get; set; }
 
@@ -1220,13 +1376,17 @@ namespace WatchIt2
                 Source = source;
 
                 AddTransparencySlider();
+                AddGaugeOpacitySlider();
                 LayoutButton = AddButton(GetLayoutText(), OnLayoutClick);
+                DoubleRibbonButton = AddButton(GetDoubleRibbonText(), OnDoubleRibbonClick);
                 AddButton("Show limits", OnLimitsClick);
                 AddButton("Localize problems", OnLocalizeProblemsClick);
                 AddButton("Show statistics", OnStatisticsClick);
                 AllProblemsButton = AddButton(GetAllProblemsText(), OnAllProblemsClick);
+                VitalsSelection = AddUIComponent<VitalsSelectionPanel>();
+                VitalsSelection.Init();
 
-                height = SettingsMenuPadding * 2f + SettingsMenuRowHeight * 5f + SettingsMenuSliderRowHeight + SettingsMenuSpace * 5f;
+                height = SettingsMenuPadding * 2f + SettingsMenuRowHeight * 6f + SettingsMenuSliderRowHeight * 2f + VitalsSelectionHeight + SettingsMenuSpace * 8f;
                 SetPosition(source);
                 SyncControls();
                 BringToFront();
@@ -1324,9 +1484,71 @@ namespace WatchIt2
 
                 UpdateTransparencyValue(Settings.InformationPanelDragBackgroundOpacity.value);
             }
+            private void AddGaugeOpacitySlider()
+            {
+                var panel = AddUIComponent<CustomUIPanel>();
+                panel.name = "Gauge opacity";
+                panel.height = SettingsMenuSliderRowHeight;
+                panel.AutoLayout = AutoLayout.Disabled;
+                panel.Atlas = CommonTextures.Atlas;
+                panel.BackgroundSprite = CommonTextures.EmptyWithoutBorder;
+                panel.isInteractive = true;
+
+                var label = panel.AddUIComponent<CustomUILabel>();
+                label.name = "Gauge opacity label";
+                label.AutoSize = AutoSize.None;
+                label.size = new Vector2(160f, 18f);
+                label.relativePosition = Vector3.zero;
+                label.text = "Gauge opacity";
+                label.textScale = 0.72f;
+                label.VerticalAlignment = UIVerticalAlignment.Middle;
+                label.HorizontalAlignment = UIHorizontalAlignment.Left;
+                label.isInteractive = false;
+
+                GaugeOpacityValue = panel.AddUIComponent<CustomUILabel>();
+                GaugeOpacityValue.name = "Gauge opacity value";
+                GaugeOpacityValue.AutoSize = AutoSize.None;
+                GaugeOpacityValue.size = new Vector2(64f, 18f);
+                GaugeOpacityValue.relativePosition = new Vector3(width - Padding.horizontal - GaugeOpacityValue.width, 0f);
+                GaugeOpacityValue.textScale = 0.72f;
+                GaugeOpacityValue.VerticalAlignment = UIVerticalAlignment.Middle;
+                GaugeOpacityValue.HorizontalAlignment = UIHorizontalAlignment.Right;
+                GaugeOpacityValue.isInteractive = false;
+
+                GaugeOpacitySlider = panel.AddUIComponent<CustomUISlider>();
+                GaugeOpacitySlider.name = "Gauge opacity slider";
+                GaugeOpacitySlider.size = new Vector2(width - Padding.horizontal, 18f);
+                GaugeOpacitySlider.relativePosition = new Vector3(0f, 23f);
+                GaugeOpacitySlider.Orientation = UIOrientation.Horizontal;
+                GaugeOpacitySlider.MinValue = 0f;
+                GaugeOpacitySlider.MaxValue = 100f;
+                GaugeOpacitySlider.StepSize = 1f;
+                GaugeOpacitySlider.ScrollWheelAmount = 1f;
+                GaugeOpacitySlider.BgAtlas = CommonTextures.Atlas;
+                GaugeOpacitySlider.BgSprite = CommonTextures.PanelSmall;
+                GaugeOpacitySlider.BgColor = ComponentStyle.SettingsColor30;
+                GaugeOpacitySlider.ThumbAtlas = CommonTextures.Atlas;
+                GaugeOpacitySlider.ThumbSprites = CommonTextures.Circle;
+                GaugeOpacitySlider.ThumbColors = new ColorSet(
+                    ComponentStyle.SettingsColor85,
+                    ComponentStyle.SettingsColor95,
+                    ComponentStyle.NormalBlue,
+                    ComponentStyle.SettingsColor85,
+                    ComponentStyle.SettingsColor30);
+                GaugeOpacitySlider.ThumbSize = new Vector2(18f, 18f);
+                GaugeOpacitySlider.Value = Settings.InformationPanelGaugeOpacity.value;
+                GaugeOpacitySlider.OnSliderValueChanged += OnGaugeOpacityChanged;
+                GaugeOpacitySlider.eventMouseUp += OnGaugeOpacityMouseUp;
+
+                UpdateGaugeOpacityValue(Settings.InformationPanelGaugeOpacity.value);
+            }
             private string GetLayoutText()
             {
                 return Settings.InformationPanelVerticalLayout ? "Horizontal layout" : "Vertical layout";
+            }
+            private string GetDoubleRibbonText()
+            {
+                return Settings.InformationPanelDoubleRibbonLayout ? "Single ribbon layout" : "Double ribbon layout";
             }
             private string GetAllProblemsText()
             {
@@ -1335,7 +1557,9 @@ namespace WatchIt2
             private void SyncControls()
             {
                 var transparency = Mathf.Clamp(Settings.InformationPanelDragBackgroundOpacity.value, 0, 100);
+                var gaugeOpacity = Mathf.Clamp(Settings.InformationPanelGaugeOpacity.value, 0, 100);
                 UpdateTransparencyValue(transparency);
+                UpdateGaugeOpacityValue(gaugeOpacity);
 
                 try
                 {
@@ -1343,11 +1567,19 @@ namespace WatchIt2
                     if (LayoutButton != null)
                         LayoutButton.text = GetLayoutText();
 
+                    if (DoubleRibbonButton != null)
+                        DoubleRibbonButton.text = GetDoubleRibbonText();
+
                     if (AllProblemsButton != null)
                         AllProblemsButton.text = GetAllProblemsText();
 
+                    VitalsSelection?.SyncControls();
+
                     if (TransparencySlider != null && Mathf.RoundToInt(TransparencySlider.Value) != transparency)
                         TransparencySlider.Value = transparency;
+
+                    if (GaugeOpacitySlider != null && Mathf.RoundToInt(GaugeOpacitySlider.Value) != gaugeOpacity)
+                        GaugeOpacitySlider.Value = gaugeOpacity;
                 }
                 finally
                 {
@@ -1390,6 +1622,16 @@ namespace WatchIt2
                 CloseSettingsMenu();
                 eventParam.Use();
             }
+            private void OnDoubleRibbonClick(UIComponent component, UIMouseEventParameter eventParam)
+            {
+                if (eventParam.used)
+                    return;
+
+                Settings.InformationPanelDoubleRibbonLayout.value = !Settings.InformationPanelDoubleRibbonLayout.value;
+                InformationPanel.RefreshLayout();
+                SyncControls();
+                eventParam.Use();
+            }
             private void OnTransparencyChanged(float value)
             {
                 if (IsSyncingControls)
@@ -1400,7 +1642,22 @@ namespace WatchIt2
                 UpdateTransparencyValue(transparency);
                 InformationPanel.RefreshBackgroundOpacity();
             }
+            private void OnGaugeOpacityChanged(float value)
+            {
+                if (IsSyncingControls)
+                    return;
+
+                var opacity = Mathf.RoundToInt(value);
+                Settings.InformationPanelGaugeOpacity.value = opacity;
+                UpdateGaugeOpacityValue(opacity);
+                InformationPanel.RefreshGaugeOpacity();
+            }
             private void OnTransparencyMouseUp(UIComponent component, UIMouseEventParameter eventParam)
+            {
+                CloseSettingsMenu();
+                eventParam.Use();
+            }
+            private void OnGaugeOpacityMouseUp(UIComponent component, UIMouseEventParameter eventParam)
             {
                 CloseSettingsMenu();
                 eventParam.Use();
@@ -1409,6 +1666,11 @@ namespace WatchIt2
             {
                 if (TransparencyValue != null)
                     TransparencyValue.text = value.ToString() + "%";
+            }
+            private void UpdateGaugeOpacityValue(int value)
+            {
+                if (GaugeOpacityValue != null)
+                    GaugeOpacityValue.text = value.ToString() + "%";
             }
             private void OnLimitsClick(UIComponent component, UIMouseEventParameter eventParam)
             {
@@ -1447,18 +1709,173 @@ namespace WatchIt2
                 eventParam.Use();
             }
         }
+
+        private class VitalsSelectionPanel : CustomUIPanel
+        {
+            private List<VitalsSelectionButton> Buttons { get; } = new List<VitalsSelectionButton>();
+
+            public override void Awake()
+            {
+                base.Awake();
+
+                name = "Vitals selection";
+                gameObject.name = name;
+                height = VitalsSelectionHeight;
+                AutoLayout = AutoLayout.Disabled;
+                Atlas = CommonTextures.Atlas;
+                BackgroundSprite = CommonTextures.EmptyWithoutBorder;
+                isInteractive = true;
+                clipChildren = true;
+            }
+            public void Init()
+            {
+                var title = AddUIComponent<CustomUILabel>();
+                title.name = "Vitals selection title";
+                title.AutoSize = AutoSize.None;
+                title.size = new Vector2(SettingsMenuWidth - SettingsMenuPadding * 2f, VitalsSelectionTitleHeight);
+                title.relativePosition = Vector3.zero;
+                title.text = "Vitals selection";
+                title.textScale = 0.72f;
+                title.textColor = Color.white;
+                title.VerticalAlignment = UIVerticalAlignment.Middle;
+                title.HorizontalAlignment = UIHorizontalAlignment.Left;
+                title.isInteractive = false;
+
+                for (var i = 0; i < Infos.Length; i += 1)
+                {
+                    var button = AddUIComponent<VitalsSelectionButton>();
+                    button.Init(Infos[i], this);
+                    Buttons.Add(button);
+                }
+
+                LayoutButtons();
+                SyncControls();
+            }
+            public void SyncControls()
+            {
+                for (var i = 0; i < Buttons.Count; i += 1)
+                    Buttons[i].SyncState();
+            }
+            private void LayoutButtons()
+            {
+                var contentWidth = SettingsMenuWidth - SettingsMenuPadding * 2f;
+                var y = VitalsSelectionTitleHeight;
+                var index = 0;
+
+                for (var row = 0; row < VitalsSelectionRows; row += 1)
+                {
+                    var rowCount = Mathf.Min(VitalsSelectionColumns, Infos.Length - index);
+                    var rowWidth = rowCount * VitalsSelectionButtonSize + Mathf.Max(0, rowCount - 1) * VitalsSelectionButtonSpace;
+                    var x = Mathf.Max(0f, (contentWidth - rowWidth) * 0.5f);
+
+                    for (var column = 0; column < rowCount; column += 1)
+                    {
+                        Buttons[index].relativePosition = new Vector3(x + (VitalsSelectionButtonSize + VitalsSelectionButtonSpace) * column, y);
+                        index += 1;
+                    }
+
+                    y += VitalsSelectionButtonSize + VitalsSelectionButtonSpace;
+                }
+            }
+        }
+
+        private class VitalsSelectionButton : CustomUIButton
+        {
+            private InformationInfo Info { get; set; }
+            private VitalsSelectionPanel Owner { get; set; }
+
+            public override void Awake()
+            {
+                base.Awake();
+
+                size = new Vector2(VitalsSelectionButtonSize, VitalsSelectionButtonSize);
+                isInteractive = true;
+                clipChildren = true;
+
+                BgAtlas = CommonTextures.Atlas;
+                BgSprites = CommonTextures.PanelSmall;
+                SelBgSprites = CommonTextures.PanelSmall;
+                BgColors = new ColorSet(
+                    new Color32(255, 255, 255, 18),
+                    new Color32(255, 255, 255, 42),
+                    new Color32(255, 255, 255, 72),
+                    new Color32(255, 255, 255, 18),
+                    new Color32(255, 255, 255, 0));
+                SelBgColors = new ColorSet(
+                    ComponentStyle.SettingsColor60,
+                    ComponentStyle.SettingsColor70,
+                    ComponentStyle.SettingsColor70,
+                    ComponentStyle.SettingsColor60,
+                    ComponentStyle.SettingsColor15);
+                IconColors = new ColorSet(
+                    new Color32(168, 172, 176, 150),
+                    new Color32(210, 214, 218, 190),
+                    new Color32(255, 255, 255, 210),
+                    new Color32(168, 172, 176, 150),
+                    new Color32(96, 96, 96, 96));
+                SelIconColors = new ColorSet(Color.white);
+                TextColors = IconColors;
+                SelTextColors = SelIconColors;
+
+                IconMode = SpriteMode.FixedSize;
+                IconSize = new Vector2(VitalsSelectionIconSize, VitalsSelectionIconSize);
+                IconPadding = new RectOffset();
+                HorizontalAlignment = UIHorizontalAlignment.Center;
+                VerticalAlignment = UIVerticalAlignment.Middle;
+                TextHorizontalAlignment = UIHorizontalAlignment.Center;
+                TextVerticalAlignment = UIVerticalAlignment.Middle;
+                TextPadding = new RectOffset(0, 0, 1, 0);
+                textScale = 0.48f;
+                useDropShadow = true;
+                dropShadowColor = new Color32(0, 0, 0, 192);
+                dropShadowOffset = new Vector2(1f, -1f);
+            }
+            public void Init(InformationInfo info, VitalsSelectionPanel owner)
+            {
+                Info = info;
+                Owner = owner;
+
+                var icon = ResolveVitalsSelectionIcon(info);
+                IconAtlas = icon.Atlas;
+                AllIconSprites = icon.SpriteName;
+                text = icon.IsFallback ? info.FallbackText : string.Empty;
+
+                eventClick += OnButtonClick;
+                SyncState();
+            }
+            public void SyncState()
+            {
+                if (Info == null)
+                    return;
+
+                IsSelected = Settings.IsVitalVisible(Info.Name);
+                tooltip = Info.Title + (IsSelected ? ": visible" : ": hidden");
+            }
+            private void OnButtonClick(UIComponent component, UIMouseEventParameter eventParam)
+            {
+                if (eventParam.used || Info == null)
+                    return;
+
+                Settings.SetVitalVisible(Info.Name, !Settings.IsVitalVisible(Info.Name));
+                Owner?.SyncControls();
+                InformationPanel.RefreshLayout();
+                eventParam.Use();
+            }
+        }
     }
     public class ProblemPanel : CustomUIPanel
     {
         private const float HorizontalFirstRowHeight = 25f; // horizonal layout row height
         private const float HorizontalExtraRowHeight = 25f;
         private const float VerticalRowHeight = 25f; //set row height in vertical layout
-        private const float ItemWidth = 66f;
+        private const float ItemWidth = 56f;
         private const float HorizontalItemSpacing = 12f;
         private const float IconSize = 20f;
-        private const float IconVerticalOffset = 3f;
-        private const float CountOffset = IconSize + 6f; // space between icon and count text
-        private const float CountTextScale = 1f;    //size of text showing problem count
+        private const float ContentHorizontalShift = -3f;
+        private const float IconVerticalOffset = 0f;    // icon height position inside a problem tile 0=centered, positive values move it up, negative - down
+        private const float CountVerticalOffset = 2f;   // height position of problem counter text in relation to icon, positive values move it up, negative - down
+        private const float CountOffset = IconSize + 5f; // space between icon and count text
+        private const float CountTextScale = 0.9f;    //size of text showing problem count
         private const float RefreshInterval = 5f;
 
         private static ProblemPanel Instance { get; set; }
@@ -1496,6 +1913,10 @@ namespace WatchIt2
                 Instance.Owner?.RefreshProblemPanelLayout();
 
             ProblemLocalizationPanel.RefreshProblemLocalizationPanel();
+        }
+        public static void RefreshGaugeOpacity()
+        {
+            Instance?.ApplyGaugeOpacity();
         }
 
         public void Init(InformationPanel owner)
@@ -1695,6 +2116,11 @@ namespace WatchIt2
 
             return Items[index];
         }
+        private void ApplyGaugeOpacity()
+        {
+            for (var i = 0; i < Items.Count; i += 1)
+                Items[i].ApplyGaugeOpacity();
+        }
         private void ToggleLocalization(UIMouseEventParameter eventParam)
         {
             if (eventParam.used)
@@ -1847,7 +2273,30 @@ namespace WatchIt2
                 Icon.atlas = iconAtlas;
                 Icon.spriteName = icon;
                 Count.text = count.ToString();
+                ApplyGaugeOpacity();
             }
+            public void ApplyGaugeOpacity()
+            {
+                var opacity = Mathf.Clamp(Settings.InformationPanelGaugeOpacity.value, 0, 100);
+                var opacityFactor = opacity / 100f;
+                var alpha = (byte)Mathf.RoundToInt(opacity * 255f / 100f);
+
+                if (Icon != null)
+                {
+                    Icon.color = new Color32(255, 255, 255, alpha);
+                    Icon.Invalidate();
+                }
+
+                if (Count != null)
+                {
+                    Count.opacity = opacityFactor;
+                    Count.textColor = Color.white;
+                    Count.disabledTextColor = Color.white;
+                    Count.dropShadowColor = new Color32(0, 0, 0, 192);
+                    Count.Invalidate();
+                }
+            }
+
             public void SetLayout(Vector2 itemSize, Vector3 position)
             {
                 size = itemSize;
@@ -1864,12 +2313,13 @@ namespace WatchIt2
                 var iconY = Icon != null ? Mathf.Max(0f, (height - Icon.height) * 0.5f) + ProblemPanel.IconVerticalOffset : 0f;
 
                 if (Icon != null)
-                    Icon.relativePosition = new Vector3(4f, iconY);
+                    Icon.relativePosition = new Vector3(4f + ProblemPanel.ContentHorizontalShift, iconY);
 
                 if (Count != null)
                 {
-                    Count.size = new Vector2(Mathf.Max(0f, width - ProblemPanel.CountOffset), ProblemPanel.IconSize);
-                    Count.relativePosition = new Vector3(ProblemPanel.CountOffset, iconY);
+                    var countX = ProblemPanel.CountOffset + ProblemPanel.ContentHorizontalShift;
+                    Count.size = new Vector2(Mathf.Max(0f, width - countX), ProblemPanel.IconSize);
+                    Count.relativePosition = new Vector3(countX, iconY + ProblemPanel.CountVerticalOffset);
                 }
             }
             private void OnItemMouseDown(UIComponent component, UIMouseEventParameter eventParam)

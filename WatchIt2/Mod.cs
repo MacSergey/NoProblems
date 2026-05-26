@@ -26,7 +26,7 @@ namespace WatchIt2
 
         public override List<ModVersion> Versions { get; } = new List<ModVersion>
         {
-            new ModVersion(new Version("2.0"), new DateTime(2026, 5, 14)),
+            new ModVersion(new Version("2.0.1"), new DateTime(2026, 5, 20)),
         };
 
         protected override Version RequiredGameVersion => new Version(1, 21, 1, 9);
@@ -168,6 +168,7 @@ namespace WatchIt2
         private const float PanelHeight = 580f;
         private const float HeaderHeight = 30f;
         private const float FilterButtonHeight = 26f;
+        private const float SortButtonHeight = 26f;
         private const float ScrollbarSize = 16f;
         private const float CloseButtonSize = 24f;
         private const float PaddingSize = 8f;
@@ -177,17 +178,21 @@ namespace WatchIt2
         private const float IconSpacing = 3f;
         private const float RefreshInterval = 5f;
         private const string TitleText = "Problem localization - click on a building or network to focus on it";
+        private const string SortByProblemTypeText = "Sort by problem type";
+        private const string SortByNameText = "Sort by name";
 
         private static ProblemLocalizationPanel Instance { get; set; }
 
         private CustomUIButton CloseButton { get; set; }
         private ProblemLocalizationFilterButton BuildingsButton { get; set; }
         private ProblemLocalizationFilterButton NetworksButton { get; set; }
+        private ProblemLocalizationFilterButton SortButton { get; set; }
         private CustomUIDragHandle DragBackground { get; set; }
         private CustomUIScrollablePanel Content { get; set; }
         private UITextureAtlas NotificationAtlas { get; set; }
         private List<ProblemLocalizationItem> Items { get; } = new List<ProblemLocalizationItem>();
         private ProblemLocalizationFilter ActiveFilter { get; set; } = ProblemLocalizationFilter.Buildings;
+        private bool IsSortedByProblemType { get; set; }
         private bool IsPanelDragActive { get; set; }
         private bool PanelDragMoved { get; set; }
         private Vector3 LastPanelDragPosition { get; set; }
@@ -298,7 +303,7 @@ namespace WatchIt2
 
             Content = AddUIComponent<CustomUIScrollablePanel>();
             Content.name = "Problem localization list";
-            Content.size = new Vector2(PanelWidth - PaddingSize * 2f, PanelHeight - HeaderHeight - FilterButtonHeight - PaddingSize);
+            Content.size = new Vector2(PanelWidth - PaddingSize * 2f, PanelHeight - HeaderHeight - FilterButtonHeight - SortButtonHeight - PaddingSize * 2f);
             Content.relativePosition = new Vector2(PaddingSize, HeaderHeight + FilterButtonHeight);
             Content.AutoLayout = AutoLayout.Vertical;
             Content.AutoLayoutSpace = 0;
@@ -313,7 +318,14 @@ namespace WatchIt2
             Content.eventMouseMove += OnPanelMouseMove;
             Content.eventMouseUp += OnPanelMouseUp;
 
+            SortButton = AddUIComponent<ProblemLocalizationFilterButton>();
+            SortButton.name = "Problem localization sort button";
+            SortButton.size = new Vector2(PanelWidth - PaddingSize * 2f, SortButtonHeight);
+            SortButton.relativePosition = new Vector2(PaddingSize, PanelHeight - PaddingSize - SortButtonHeight);
+            SortButton.eventClick += OnSortButtonClick;
+
             RefreshFilterButtons();
+            RefreshSortButton();
         }
         public override void Update()
         {
@@ -434,6 +446,16 @@ namespace WatchIt2
         {
             SetFilter(ProblemLocalizationFilter.Networks, eventParam);
         }
+        private void OnSortButtonClick(UIComponent component, UIMouseEventParameter eventParam)
+        {
+            if (eventParam.used)
+                return;
+
+            IsSortedByProblemType = !IsSortedByProblemType;
+            RefreshSortButton();
+            RefreshNow();
+            eventParam.Use();
+        }
         private void SetFilter(ProblemLocalizationFilter filter, UIMouseEventParameter eventParam)
         {
             if (eventParam.used)
@@ -452,6 +474,14 @@ namespace WatchIt2
             if (NetworksButton != null)
                 NetworksButton.IsSelected = ActiveFilter == ProblemLocalizationFilter.Networks;
         }
+        private void RefreshSortButton()
+        {
+            if (SortButton == null)
+                return;
+
+            SortButton.text = IsSortedByProblemType ? SortByNameText : SortByProblemTypeText;
+            SortButton.IsSelected = IsSortedByProblemType;
+        }
         private void RefreshNow()
         {
             LastRefreshTime = Time.realtimeSinceStartup;
@@ -459,13 +489,19 @@ namespace WatchIt2
             try
             {
                 var locations = ReadProblemLocations();
+                var visibleLocations = new List<ProblemLocation>();
                 var itemIndex = 0;
 
                 foreach (var location in locations)
                 {
-                    if (!IsLocationVisible(location))
-                        continue;
+                    if (IsLocationVisible(location))
+                        visibleLocations.Add(location);
+                }
 
+                SortLocations(visibleLocations);
+
+                foreach (var location in visibleLocations)
+                {
                     var item = GetItem(itemIndex);
                     item.Set(location, NotificationAtlas);
                     item.isVisible = true;
@@ -481,6 +517,79 @@ namespace WatchIt2
             {
                 SingletonMod<Mod>.Logger.Error(e);
             }
+        }
+        private void SortLocations(List<ProblemLocation> locations)
+        {
+            if (IsSortedByProblemType)
+                SortLocationsByProblemType(locations);
+            else
+                SortLocationsByName(locations);
+        }
+        private static void SortLocationsByName(List<ProblemLocation> locations)
+        {
+            locations.Sort(CompareLocationNames);
+        }
+        private static void SortLocationsByProblemType(List<ProblemLocation> locations)
+        {
+            var problemCounts = new Dictionary<ProblemStruct, int>();
+            foreach (var location in locations)
+            {
+                foreach (var problem in Settings.PanelProblems)
+                {
+                    var locationProblemCount = location.GetProblemCount(problem);
+                    if (locationProblemCount == 0)
+                        continue;
+
+                    problemCounts.TryGetValue(problem, out var count);
+                    problemCounts[problem] = count + locationProblemCount;
+                }
+            }
+
+            var sortInfos = new Dictionary<ProblemLocation, ProblemLocalizationSortInfo>();
+            foreach (var location in locations)
+                sortInfos[location] = GetProblemLocalizationSortInfo(location, problemCounts);
+
+            locations.Sort((a, b) =>
+            {
+                var aInfo = sortInfos[a];
+                var bInfo = sortInfos[b];
+
+                var comparison = bInfo.Count.CompareTo(aInfo.Count);
+                if (comparison != 0)
+                    return comparison;
+
+                comparison = aInfo.Order.CompareTo(bInfo.Order);
+                if (comparison != 0)
+                    return comparison;
+
+                return CompareLocationNames(a, b);
+            });
+        }
+        private static ProblemLocalizationSortInfo GetProblemLocalizationSortInfo(ProblemLocation location, Dictionary<ProblemStruct, int> problemCounts)
+        {
+            var bestCount = 0;
+            var bestOrder = int.MaxValue;
+            var order = 0;
+
+            foreach (var problem in Settings.PanelProblems)
+            {
+                if (location.GetProblemCount(problem) != 0 && problemCounts.TryGetValue(problem, out var count))
+                {
+                    if (count > bestCount)
+                    {
+                        bestCount = count;
+                        bestOrder = order;
+                    }
+                }
+
+                order += 1;
+            }
+
+            return new ProblemLocalizationSortInfo(bestCount, bestOrder);
+        }
+        private static int CompareLocationNames(ProblemLocation a, ProblemLocation b)
+        {
+            return string.Compare(a.Name, b.Name, StringComparison.CurrentCultureIgnoreCase);
         }
         private bool IsLocationVisible(ProblemLocation location)
         {
@@ -541,11 +650,12 @@ namespace WatchIt2
                     continue;
 
                 var segment = GetNamedSegment(nodeBuffer[i]);
-                var key = segment != 0 ? $"network:{segment}" : $"node:{i}";
+                var focusNode = segment == 0 || Settings.HasNotConnectedProblems(problems);
+                var key = focusNode ? $"node:{i}" : $"network:{segment}";
                 var name = GetNetworkName(netManager, nodeBuffer, i, segment);
 
-                var position = segment != 0 ? netManager.m_segments.m_buffer[segment].m_middlePosition : nodeBuffer[i].m_position;
-                AddLocation(locations, key, name, problems, segment != 0 ? new InstanceID { NetSegment = segment } : new InstanceID { NetNode = i }, position, ProblemLocationType.Network);
+                var position = focusNode ? nodeBuffer[i].m_position : netManager.m_segments.m_buffer[segment].m_middlePosition;
+                AddLocation(locations, key, name, problems, focusNode ? new InstanceID { NetNode = i } : new InstanceID { NetSegment = segment }, position, ProblemLocationType.Network);
             }
 
             for (ushort i = 0; i < segmentBuffer.Length; i += 1)
@@ -562,14 +672,13 @@ namespace WatchIt2
             }
 
             var result = new List<ProblemLocation>(locations.Values);
-            result.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.CurrentCultureIgnoreCase));
             return result;
         }
         private static void AddLocation(Dictionary<string, ProblemLocation> locations, string key, string name, ProblemStruct problems, InstanceID instance, Vector3 position, ProblemLocationType type)
         {
             if (locations.TryGetValue(key, out var location))
             {
-                location.Problems |= problems;
+                location.AddProblems(problems);
                 return;
             }
 
@@ -630,14 +739,45 @@ namespace WatchIt2
             public InstanceID Instance { get; }
             public Vector3 Position { get; }
             public ProblemLocationType Type { get; }
+            private Dictionary<ProblemStruct, int> ProblemCounts { get; } = new Dictionary<ProblemStruct, int>();
 
             public ProblemLocation(string name, ProblemStruct problems, InstanceID instance, Vector3 position, ProblemLocationType type)
             {
                 Name = name;
-                Problems = problems;
                 Instance = instance;
                 Position = position;
                 Type = type;
+                AddProblems(problems);
+            }
+            public void AddProblems(ProblemStruct problems)
+            {
+                Problems |= problems;
+
+                foreach (var problem in Settings.PanelProblems)
+                {
+                    if ((problems & problem).IsNone)
+                        continue;
+
+                    ProblemCounts.TryGetValue(problem, out var count);
+                    ProblemCounts[problem] = count + 1;
+                }
+            }
+            public int GetProblemCount(ProblemStruct problem)
+            {
+                ProblemCounts.TryGetValue(problem, out var count);
+                return count;
+            }
+        }
+
+        private class ProblemLocalizationSortInfo
+        {
+            public int Count { get; }
+            public int Order { get; }
+
+            public ProblemLocalizationSortInfo(int count, int order)
+            {
+                Count = count;
+                Order = order;
             }
         }
 
@@ -679,8 +819,10 @@ namespace WatchIt2
                     new Color32(73, 78, 87, 255));
 
                 AllTextColors = Color.white;
+                VerticalAlignment = UIVerticalAlignment.Middle;
                 TextHorizontalAlignment = UIHorizontalAlignment.Center;
                 TextVerticalAlignment = UIVerticalAlignment.Middle;
+                TextPadding = new RectOffset(0, 0, 3, 0);
                 textScale = 0.78f;
                 useDropShadow = true;
                 dropShadowColor = new Color32(0, 0, 0, 192);
@@ -883,9 +1025,14 @@ namespace WatchIt2
 
         public static ProblemStruct EnabledProblems { get; private set; }
         public static Dictionary<ProblemStruct, SavedBool> Data { get; } = new Dictionary<ProblemStruct, SavedBool>();
+        private static Dictionary<string, SavedBool> VitalVisibilityData { get; } = new Dictionary<string, SavedBool>();
         public static SavedBool HidingEnabled { get; } = new SavedBool(nameof(HidingEnabled), SettingsFile, true, true);
         public static SavedBool InformationPanelVerticalLayout { get; } = new SavedBool(nameof(InformationPanelVerticalLayout), SettingsFile, false, true);
+        public static SavedBool InformationPanelDoubleRibbonLayout { get; } = new SavedBool(nameof(InformationPanelDoubleRibbonLayout), SettingsFile, false, true);
+        public static SavedFloat InformationPanelPositionX { get; } = new SavedFloat(nameof(InformationPanelPositionX), SettingsFile, -1f, true);
+        public static SavedFloat InformationPanelPositionY { get; } = new SavedFloat(nameof(InformationPanelPositionY), SettingsFile, -1f, true);
         public static SavedInt InformationPanelDragBackgroundOpacity { get; } = new SavedInt(nameof(InformationPanelDragBackgroundOpacity), SettingsFile, 0, true);
+        public static SavedInt InformationPanelGaugeOpacity { get; } = new SavedInt(nameof(InformationPanelGaugeOpacity), SettingsFile, 100, true);
         public static SavedInt HideType { get; } = new SavedInt(nameof(HideType), SettingsFile, 0, true);
         public static SavedBool AbandonedBuildingsDisabled { get; } = new SavedBool(nameof(AbandonedBuildingsDisabled), SettingsFile, true, true);
         public static SavedBool BurnedDownBuildingsDisabled { get; } = new SavedBool(nameof(BurnedDownBuildingsDisabled), SettingsFile, true, true);
@@ -914,6 +1061,24 @@ namespace WatchIt2
                 EnabledProblems |= problem;
             else
                 EnabledProblems &= ~problem;
+        }
+        internal static bool IsVitalVisible(string name)
+        {
+            return GetVitalVisibility(name).value;
+        }
+        internal static void SetVitalVisible(string name, bool visible)
+        {
+            GetVitalVisibility(name).value = visible;
+        }
+        private static SavedBool GetVitalVisibility(string name)
+        {
+            if (!VitalVisibilityData.TryGetValue(name, out var saved))
+            {
+                saved = new SavedBool("Vital" + name, SettingsFile, true, true);
+                VitalVisibilityData[name] = saved;
+            }
+
+            return saved;
         }
         internal static ProblemStruct CountedProblems => ProblemStruct.All & ~Ignore;
         internal static IEnumerable<ProblemStruct> PanelProblems
@@ -945,6 +1110,10 @@ namespace WatchIt2
         internal static ProblemStruct GetPanelProblems(ProblemStruct problems)
         {
             return Settings.GetRenderedProblems(problems) & CountedProblems & EnabledProblems;
+        }
+        internal static bool HasNotConnectedProblems(ProblemStruct problems)
+        {
+            return (problems & NotConnectedProblems).IsNotNone;
         }
         internal static ProblemStruct GetNetworkSegmentPanelProblems(NetSegment segment)
         {
@@ -1098,13 +1267,21 @@ namespace WatchIt2
             opacityItem.Label = "Panel transparency";
             opacityItem.Value = InformationPanelDragBackgroundOpacity.value;
             opacityItem.OnValueChanged += OnInformationPanelBackgroundOpacityChanged;
+            var gaugeOpacityItem = generalSection.AddUIComponent<GaugeOpacitySlider>();
+            gaugeOpacityItem.Label = "Gauge opacity";
+            gaugeOpacityItem.Value = InformationPanelGaugeOpacity.value;
+            gaugeOpacityItem.OnValueChanged += OnInformationPanelGaugeOpacityChanged;
             var verticalLayoutItem = generalSection.AddUIComponent<VerticalLayoutToggle>();
             verticalLayoutItem.Label = "Vertical information panel";
             verticalLayoutItem.Value = InformationPanelVerticalLayout;
             verticalLayoutItem.OnValueChanged += OnInformationPanelLayoutChanged;
+            var doubleRibbonLayoutItem = generalSection.AddUIComponent<DoubleRibbonLayoutToggle>();
+            doubleRibbonLayoutItem.Label = "Double ribbon layout";
+            doubleRibbonLayoutItem.Value = InformationPanelDoubleRibbonLayout;
+            doubleRibbonLayoutItem.OnValueChanged += OnInformationPanelLayoutChanged;
 
             var restoreButtonPanel = generalSection.AddButtonPanel(new RectOffset(0, 0, 5, 5), 0);
-            restoreButtonPanel.AddButton("Restore default values", () => RestoreDefaultValues(opacityItem, verticalLayoutItem, hideTypeCheckBoxes), 250f, 1f);
+            restoreButtonPanel.AddButton("Restore default values", () => RestoreDefaultValues(opacityItem, gaugeOpacityItem, verticalLayoutItem, doubleRibbonLayoutItem, hideTypeCheckBoxes), 250f, 1f);
 
             var hideTypeGroup = generalSection.AddItemsGroup();
             hideTypeCheckBoxes = hideTypeGroup.AddTogglePanel(Localize.Setting_HideType, HideType, new string[] { Localize.Setting_HideAny, Localize.Setting_HideNormal, Localize.Setting_Remove }, OnDisabledChanged).checkBoxes;
@@ -1185,20 +1362,31 @@ namespace WatchIt2
             InformationPanelDragBackgroundOpacity.value = value;
             InformationPanel.RefreshBackgroundOpacity();
         }
-        private void RestoreDefaultValues(OpacitySlider opacityItem, VerticalLayoutToggle verticalLayoutItem, CheckPanelSettingsItem hideTypeCheckBoxes)
+        private void OnInformationPanelGaugeOpacityChanged(int value)
+        {
+            InformationPanelGaugeOpacity.value = value;
+            InformationPanel.RefreshGaugeOpacity();
+        }
+        private void RestoreDefaultValues(OpacitySlider opacityItem, GaugeOpacitySlider gaugeOpacityItem, VerticalLayoutToggle verticalLayoutItem, DoubleRibbonLayoutToggle doubleRibbonLayoutItem, CheckPanelSettingsItem hideTypeCheckBoxes)
         {
             InformationPanelDragBackgroundOpacity.value = 50;
+            InformationPanelGaugeOpacity.value = 100;
             InformationPanelVerticalLayout.value = false;
+            InformationPanelDoubleRibbonLayout.value = false;
             HideType.value = 1;
+            InformationPanel.RestoreDefaultVitalVisibility();
 
             opacityItem.Value = InformationPanelDragBackgroundOpacity.value;
+            gaugeOpacityItem.Value = InformationPanelGaugeOpacity.value;
             verticalLayoutItem.Value = InformationPanelVerticalLayout.value;
+            doubleRibbonLayoutItem.Value = InformationPanelDoubleRibbonLayout.value;
             if (hideTypeCheckBoxes != null)
                 hideTypeCheckBoxes.Value = HideType.value;
             else
                 OnDisabledChanged(HideType.value);
 
             InformationPanel.RefreshBackgroundOpacity();
+            InformationPanel.RefreshGaugeOpacity();
             InformationPanel.RestoreDefaultPosition();
         }
 
